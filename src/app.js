@@ -54,3 +54,5 @@ if (config.envname !== 'test') {
 
 app.use(bodyParser.json());
 app.listen(config.env.server.port, config.env.server.host, _listenSuccess);
+
+export default app;
