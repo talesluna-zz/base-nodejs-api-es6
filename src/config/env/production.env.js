@@ -9,7 +9,7 @@ module.exports = {
         cors: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+            'Access-Control-Allow-Headers6': 'Origin, X-Requested-With, Content-Type, Accept'
         }
     },
     databases: {
