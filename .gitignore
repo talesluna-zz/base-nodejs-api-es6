@@ -1,0 +1,8 @@
+.idea
+.conf
+.config
+.log
+package-lock.json
+dist
+releases
+node_modules/

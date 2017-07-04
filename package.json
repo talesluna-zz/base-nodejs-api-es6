@@ -1,0 +1,34 @@
+{
+  "name": "basic_express_api_structure",
+  "version": "1.0.0",
+  "description": "Basic strcuture for REST API with ExpressJS",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "export NODE_ENV='development' && nodemon --exec babel-node src/app.js --use_strict",
+    "start": "export NODE_ENV='production' && pm2 start dist/app.js --name='api_name'",
+    "stop": "pm2 stop 'api_name'",
+    "test": "export NODE_ENV='test' && mocha src/tests/ --compilers js:babel-core/register --recursive",
+    "clean": "rm -rf dist && mkdir dist",
+    "build": "npm run clean && babel ./src -d ./dist --copy-files"
+  },
+  "author": "Tales Luna <tales.ferreira.luna@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.0.0-rc.0",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "joi": "^10.5.2",
+    "mongoose": "^4.11.0",
+    "morgan": "^1.8.2",
+    "mysql2": "^1.3.5",
+    "sequelize": "^4.2.0"
+  }
+}
