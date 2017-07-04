@@ -14,22 +14,18 @@ module.exports = {
     },
     databases: {
         mongodb: {
-            host: '192.168.1.31',
+            host: '127.0.0.1',
             port: 27017,
-            user: '',
-            pass: '',
+            user: 'mongo-user',
+            pass: 'mongo-pass',
             name: 'example'
         },
         mysql: {
-            host: '192.168.1.31',
+            host: '127.0.0.1',
             port: 3306,
-            user: 'root',
-            pass: 'root',
+            user: 'mysql-user',
+            pass: 'mysql-pass',
             name: 'example'
         }
-    },
-    jwt: {
-        jwtSession: {session: false},
-        jwtSecret: '128BitsSecretKeyToChoose' + new Date().toISOString()
     }
 };
