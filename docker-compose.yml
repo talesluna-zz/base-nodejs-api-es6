@@ -1,12 +1,12 @@
 version: '2'
 services:
   service:
-    container_name: microservice_name
+    container_name: myapp_name
     build: .
     ports:
       - "3000:3000"
     volumes:
       - ./:/usr/src/service
-    image: prominas/microservice_name
+    image: mytag/myapp_name
     tty: true
-    entrypoint: /bin/bash
+    entrypoint: /bin/sh

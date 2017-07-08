@@ -1,4 +1,4 @@
-FROM prominas/node_mservice
+FROM node:alpine
 
 # Create app directory
 RUN mkdir -p /usr/src/service
@@ -10,4 +10,4 @@ RUN chmod 777 storage/logs/app
 
 # Start service
 EXPOSE 3000
-CMD [ "bash" ]
+CMD [ "sh" ]
