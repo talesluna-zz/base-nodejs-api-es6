@@ -8,6 +8,9 @@ WORKDIR /usr/src/service
 RUN mkdir -p storage/logs/app
 RUN chmod 777 storage/logs/app
 
+# Install dependencies
+RUN npm install -g pm2
+
 # Start service
 EXPOSE 3000
 CMD [ "sh" ]
