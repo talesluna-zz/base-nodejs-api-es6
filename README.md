@@ -1,4 +1,4 @@
-# Basic strcuture for REST API with ExpressJS
+# Basic structure for REST API with ExpressJS
 
 This is a simple and basic structure for deploy API using ExpressJs and NodeJs easily and quickly.
 
@@ -9,6 +9,9 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs e
 ## Structure
 ```
 ├── .babelrc
+├── docker-compose.yml
+├── Dockerfile
+├── .dockerignore
 ├── .eslintrc.js
 ├── .eslintignore
 ├── .gitignore
@@ -55,8 +58,11 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs e
   ## Install
   ```sh
   # Clone the repo
-  git clone git@github.com:institutoprominas/microservices_base_api.git
-  cd microservices_base_api
+  git clone https://github.com/talesluna/basic_express_api_structure
+  cd basic_express_api_structure
+  
+  # Remove .git
+  rm -rf .git
   
   # Install packages
   npm install
@@ -70,9 +76,13 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs e
   npm run test  # (Mocha tests)
   npm start     # (Production mode with pm2, build before)
   npm stop      # (Stop Production)
-  
+
   # Deploy (Docker)
-  sudo npm run deploy   # Pull a base image and start new container
-  sudo npm run undeploy # Stop and remove container
-  docker-compose  ...   # Others deployments commands      
+  npm run deploy    # (Pull defined image and deploy docker container)
+  npm run undeploy  # (Stop and remove deployed container)
+  docker-compose    # (Others deployment options)
+
+  # To install docker-compose
+  sudo apt install python python-pip
+  sudo pip install docker-compose
   ```
