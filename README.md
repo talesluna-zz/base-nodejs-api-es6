@@ -1,10 +1,13 @@
-# Basic structure for REST API with ExpressJS
+# Basic structure for REST API with ExpressJS/NodeJS and Docker integration.
 
-This is a simple and basic structure for deploy API using ExpressJs and NodeJs easily and quickly.
+This is a simple and basic structure for deploy API using ExpressJs and NodeJs with docker deploy, easily and quickly.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![node](https://img.shields.io/badge/NodeJS-8-green.svg?style=flat-square)]()
 [![es6](https://img.shields.io/badge/ES6-Babel-blue.svg?style=flat-square)]()
+[![docker](https://img.shields.io/badge/Deploy-Docker-blue.svg?style=flat-square)]()
+[![sql](https://img.shields.io/badge/SQL-Sequelize-red.svg?style=flat-square)]()
+[![mongo](https://img.shields.io/badge/NoSQL-Mongoose-green.svg?style=flat-square)]()
 
 ## Structure
 ```
