@@ -13,15 +13,14 @@ describe("Example tests", () => {
                 .get('/')
                 .end((err, res) => {
                     assert.deepEqual(res.body.status, true);
-                    assert.deepEqual(res.body.code, 200);
-                    assert.deepEqual(res.body.message, 'index');
+                    assert.deepEqual(res.body.code, 201);
                     done();
                 });
         });
 
-        it('should be response with error on request /noexists', (done) => {
+        it('should be response with error on request /no_exists', (done) => {
             server
-                .get('/noexists')
+                .get('/no_exists')
                 .end((err, res) => {
                     assert.deepEqual(res.body.status, false);
                     assert.deepEqual(res.body.code, 404);
