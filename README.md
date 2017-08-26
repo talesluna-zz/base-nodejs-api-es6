@@ -61,7 +61,7 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
   ## Install
   ```sh
   # Clone the repo
-  git clone https://github.com/talesluna/basic_express_api_structure
+  git clone https://github.com/talesluna/base_nodejs_express_api_es6
   cd basic_express_api_structure
   
   # Remove .git
