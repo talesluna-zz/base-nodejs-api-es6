@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "dev": "export NODE_ENV='development'  && nodemon --exec babel-node src/app.js --use_strict",
-    "test": "export NODE_ENV='test'         && mocha src/tests/ --compilers js:babel-core/register --recursive",
+    "test": "export NODE_ENV='test'         && mocha src/tests/ --timeout 15000 --compilers js:babel-core/register --recursive",
     "start": "export NODE_ENV='production'   && pm2 start dist/app.js --name='api_name' -l storage/logs/app/app.log",
     "stop": "pm2 stop 'api_name'",
     "clean": "rm -rf dist                    && mkdir dist",

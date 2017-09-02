@@ -4,30 +4,31 @@ import app       from '../../app';
 
 const server = superTest(app);
 
-describe("Example tests", () => {
+before((done) => {
+    app.on('app_started', () => {
+        done();
+    });
+});
 
-    describe('Index', () => {
+describe('Example', () => {
 
-        it('should be response with success on request /', (done) => {
-            server
-                .get('/')
-                .end((err, res) => {
-                    assert.deepEqual(res.body.status, true);
-                    assert.deepEqual(res.body.code, 201);
-                    done();
-                });
-        });
+    it('should be response with success on request /', (done) => {
+        server
+            .get('/')
+            .end((err, res) => {
+                assert(res.body.data.id);
+                assert.deepEqual(res.body.code, 201);
+                done();
+            });
+    });
 
-        it('should be response with error on request /no_exists', (done) => {
-            server
-                .get('/no_exists')
-                .end((err, res) => {
-                    assert.deepEqual(res.body.status, false);
-                    assert.deepEqual(res.body.code, 404);
-                    done();
-                });
-        });
-
+    it('should be response with error on request /no_exists', (done) => {
+        server
+            .get('/no_exists')
+            .end((err, res) => {
+                assert.deepEqual(res.body.code, 404);
+                done();
+            });
     });
 
 });

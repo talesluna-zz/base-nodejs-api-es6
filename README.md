@@ -23,7 +23,7 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
 ├── README.md
 └── src
     ├── api
-    │   └── index
+    │   └── example
     │       ├── _index.js
     │       ├── example.js
     │       └── _validates
@@ -39,23 +39,30 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
     ├── core
     │   ├── Cors.js
     │   ├── Database.js
+    │   ├── RequestQuery.js
     │   ├── Response.js
-    │   └── Routers.js
+    │   ├── Routers.js
+    │   ├── Security.js
+    │   └── SSL.js
     ├── schemas
     │   ├── mongodb
     │   │   └── example.js
     │   ├── mysql
     │   │   └── example.js
+    │   ├── postgres
+    │   │   └── example.js
     │   └── ...
-    ├── schemas
     ├── services
     │   └── example.js
     ├── storage
+    │   ├── certificates
+    │   │   ├── example.crt
+    │   │   └── example.key
     │   ├── logs
     │   └── static
     └── tests
         └── api
-            └── index.test.js
+            └── example.test.js
   ```
   
   ## Install
