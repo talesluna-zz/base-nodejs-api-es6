@@ -1,4 +1,1 @@
-module.exports = {
-    sequelize: null,
-    DB: []
-};
+module.exports = {};
