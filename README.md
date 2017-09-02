@@ -27,7 +27,7 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
     │       ├── _index.js
     │       ├── example.js
     │       └── _validates
-    │           └── index.validate.js
+    │           └── example.validate.js
     ├── app.js
     ├── config
     │   ├── api.conf.js

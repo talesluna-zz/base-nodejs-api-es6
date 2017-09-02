@@ -1,23 +1,18 @@
 {
-  "name": "basic_express_api_structure",
-  "version": "1.0.0",
-  "description": "Basic strcuture for REST API with ExpressJS",
+  "name": " base_nodejs_express_api_es6 ",
+  "version": "1.0.2",
+  "description": "Base NodeJS REST API using ExpressJS, ES6 and Docker",
   "main": "src/app.js",
   "scripts": {
-
-    "dev"     : "export NODE_ENV='development'  && nodemon --exec babel-node src/app.js --use_strict",
-    "test"    : "export NODE_ENV='test'         && mocha src/tests/ --compilers js:babel-core/register --recursive",
-
-    "start"   : "export NODE_ENV='production'   && pm2 start dist/app.js --name='api_name' -l storage/logs/app/app.log",
-    "stop"    : "pm2 stop 'api_name'",
-    "clean"   : "rm -rf dist                    && mkdir dist",
-
-    "build"   : "npm run clean                  && babel ./src -d ./dist --copy-files",
-
-    "start-on-docker" : "export NODE_ENV='production'   && pm2-docker dist/app.js",
-    "deploy"          : "npm run undeploy               && sudo docker-compose up -d && sudo docker-compose exec -d service npm run start-on-docker",
-    "undeploy"        : "sudo docker-compose stop       && sudo docker-compose rm"
-
+    "dev": "export NODE_ENV='development'  && nodemon --exec babel-node src/app.js --use_strict",
+    "test": "export NODE_ENV='test'         && mocha src/tests/ --compilers js:babel-core/register --recursive",
+    "start": "export NODE_ENV='production'   && pm2 start dist/app.js --name='api_name' -l storage/logs/app/app.log",
+    "stop": "pm2 stop 'api_name'",
+    "clean": "rm -rf dist                    && mkdir dist",
+    "build": "npm run clean                  && babel ./src -d ./dist --copy-files",
+    "start-on-docker": "export NODE_ENV='production'   && pm2-docker dist/app.js",
+    "deploy": "npm run undeploy               && sudo docker-compose up -d && sudo docker-compose exec -d service npm run start-on-docker",
+    "undeploy": "sudo docker-compose stop       && sudo docker-compose rm"
   },
   "author": "Tales Luna <tales.ferreira.luna@gmail.com>",
   "license": "MIT",
@@ -31,12 +26,20 @@
     "supertest": "^3.0.0"
   },
   "dependencies": {
+    "acl": "^0.4.10",
     "body-parser": "^1.17.2",
+    "compression": "^1.7.0",
+    "crypto": "^1.0.1",
     "express": "^4.15.3",
+    "helmet": "^3.8.1",
     "joi": "^10.5.2",
     "mongoose": "^4.11.0",
     "morgan": "^1.8.2",
-    "mysql2": "^1.3.5",
-    "sequelize": "^4.2.0"
+    "mysql2": "^1.4.2",
+    "pg": "^6.1.0",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "sequelize": "^4.3.2"
   }
 }
