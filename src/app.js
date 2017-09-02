@@ -11,7 +11,6 @@ import ApiConfig    from './config/api.conf';
 // Core
 import Cors         from './core/Cors';
 import Routers      from './core/Routers';
-import Response     from './core/Response';
 import Database     from './core/Database';
 import RequestQuery from './core/RequestQuery';
 import SSL          from './core/SSL';
@@ -34,9 +33,6 @@ const app           = express();
 const _setupRouters = () => {
     routers.syncRouters(app);
     // Case route not exists send a default 404 response
-    app.get('*', function(req, res){
-        Response.send(res, null, Response.NOT_FOUND, 'route_not_found');
-    });
 };
 
 /**
@@ -66,9 +62,9 @@ const _setupCors = () => {
 const _setupDatabase = () => {
 
     // NoSQL with MongoDB
-    // database.connectMongo(config.env.databases.mongodb, () => {
-    //     _appLog('[MongoDB]\tConnection Success');
-    // });
+    database.connectMongo(config.env.databases.mongodb, () => {
+        _appLog('[MongoDB]\tConnection Success');
+    });
 
     // MySQL with sequelize
     database.connectSQL(config.env.databases.mysql, () => {
