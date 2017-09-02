@@ -1,7 +1,9 @@
-/* eslint-disable no-console,no-undef,no-process-exit */
+/* eslint-disable no-console,no-undef*/
 import express      from 'express';
 import bodyParser   from 'body-parser';
+import compression  from 'compression';
 import morgan       from 'morgan';
+import https        from 'https';
 
 // Config
 import ApiConfig    from './config/api.conf';
@@ -11,13 +13,19 @@ import Cors         from './core/Cors';
 import Routers      from './core/Routers';
 import Response     from './core/Response';
 import Database     from './core/Database';
+import RequestQuery from './core/RequestQuery';
+import SSL          from './core/SSL';
+import Security     from './core/Security';
 
-// Classes
-const config    = new ApiConfig();
-const cors      = new Cors();
-const routers   = new Routers();
-const app       = express();
-const database  = new Database();
+// Classes & app
+const config        = new ApiConfig();
+const cors          = new Cors();
+const routers       = new Routers();
+const database      = new Database();
+const requestQuery  = new RequestQuery();
+const ssl           = new SSL().getCredentials();
+const security      = new Security();
+const app           = express();
 
 /**
  * Use routes in app
@@ -29,6 +37,17 @@ const _setupRouters = () => {
     app.get('*', function(req, res){
         Response.send(res, null, Response.NOT_FOUND, 'route_not_found');
     });
+};
+
+/**
+ * Console log output
+ * @param text
+ * @private
+ */
+const _appLog = (text) => {
+    if (config.envname !== 'test') {
+        console.log(text)
+    }
 };
 
 /**
@@ -45,26 +64,25 @@ const _setupCors = () => {
  * @private
  */
 const _setupDatabase = () => {
+
     // NoSQL with MongoDB
-    database.connectInMongoDB(config.env.databases.mongodb)
-        .then(() => {
-            console.log('[MongoDB]\tConnection Success');
-            _setupCors();
-            _setupRouters();
-        })
-        .catch(err => {
-            console.log('[MongoDB Error] \n\n\t' + err.message + '\n\tEXIT\n');
-            process.exit(0);
-        });
-    // SQL with sequelize, define you SGBD
-    database.connectInSQLDialect(config.env.databases.mysql)
-        .then(() => {
-            console.log('[SQL]\t\tConnection Success');
-        })
-        .catch(err => {
-            console.log('[SQL Error] \n\n\t' + err.message + '\n\tEXIT\n');
-            process.exit(0);
-        });
+    // database.connectMongo(config.env.databases.mongodb, () => {
+    //     _appLog('[MongoDB]\tConnection Success');
+    // });
+
+    // MySQL with sequelize
+    database.connectSQL(config.env.databases.mysql, () => {
+        _appLog('[' + config.env.databases.mysql.dialect + ']\t\tConnection Success');
+    });
+
+    // PostgreSQL with sequelize
+    database.connectSQL(config.env.databases.postgres, () => {
+        _appLog('[' + config.env.databases.postgres.dialect + ']\tConnection Success');
+        _setupCors();
+        _setupRouters();
+    })
+
+    // ... define others SQL dialects
 };
 
 /**
@@ -73,14 +91,31 @@ const _setupDatabase = () => {
  */
 const _listenSuccess = () => {
     _setupDatabase();
-    console.log(`\n${config.env.app.name} on at ${config.env.server.host}:${config.env.server.port}\n`);
+    _appLog(`\n${config.env.app.name} on at ${config.env.server.host}:${config.env.server.port}\n`);
+    if (ssl.cert && config.env.server.secure) {
+        _appLog('[SSL_ON]\tSecure')
+    } else {
+        _appLog('[SSL_OFF]\tNOT SECURE (!)')
+    }
 };
 
+// No use logs in test environment!
 if (config.envname !== 'test') {
     app.use(morgan(config.envname === 'development'? 'dev' : 'combined'));
 }
 
+// Express global usages and middlewares
 app.use(bodyParser.json());
-app.listen(config.env.server.port, config.env.server.host, _listenSuccess);
+app.use(requestQuery.parseQuery);
+app.use(compression());
+
+// Security middlewares with helmet
+security.makeSecure(app);
+
+// Create secure server or insecure server (see your *.env.js)
+const server = config.env.server.secure && ssl.cert ? https.createServer(ssl, app) : app;
+
+// Listen server
+server.listen(config.env.server.port, config.env.server.host, _listenSuccess);
 
 export default app;
