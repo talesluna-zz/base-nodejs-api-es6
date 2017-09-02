@@ -6,8 +6,10 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
 [![node](https://img.shields.io/badge/NodeJS-8-green.svg?style=flat-square)]()
 [![es6](https://img.shields.io/badge/ES6-Babel-blue.svg?style=flat-square)](.babelrc)
 [![docker](https://img.shields.io/badge/Deploy-Docker-blue.svg?style=flat-square)](Dockerfile)
-[![sql](https://img.shields.io/badge/SQL-Sequelize-red.svg?style=flat-square)](src/core/Database.js#L28)
-[![mongo](https://img.shields.io/badge/NoSQL-Mongoose-green.svg?style=flat-square)](src/core/Database.js#L18)
+[![sql](https://img.shields.io/badge/SQL-Sequelize-red.svg?style=flat-square)](src/core/Database.js#L42)
+[![mongo](https://img.shields.io/badge/NoSQL-Mongoose-green.svg?style=flat-square)](src/core/Database.js#L30)
+[![ssl](https://img.shields.io/badge/SSL-HTTPS-green.svg?style=flat-square)](src/core/SSL.js)
+[![helmet](https://img.shields.io/badge/Security-Helmet-pink.svg?style=flat-square)](src/core/Security.js)
 
 ## Structure
 ```
