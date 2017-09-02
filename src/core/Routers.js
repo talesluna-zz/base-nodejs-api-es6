@@ -29,5 +29,10 @@ export default class Routers {
             }
             next();
         });
+
+        /**
+         * Emit app started completely
+         */
+        app.emit('app_started');
     }
 }
