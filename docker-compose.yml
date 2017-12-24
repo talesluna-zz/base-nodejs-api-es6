@@ -1,12 +1,15 @@
 version: '2'
 services:
   service:
-    container_name: myapp_name
+    container_name: api_name
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3001"
     volumes:
-      - ./:/usr/src/service
-    image: mytag/myapp_name
+      - ./dist:/opt/services/api_name/dist
+      - ./node_modules:/opt/services/api_name/node_modules
+    image: my_tag/api_name
     tty: true
-    entrypoint: /bin/sh
+    environment:
+      - NODE_ENV=production
+    entrypoint: node dist/app.js

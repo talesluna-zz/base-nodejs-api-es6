@@ -11,6 +11,16 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
 [![ssl](https://img.shields.io/badge/SSL-HTTPS-green.svg?style=flat-square)](src/core/SSL.js)
 [![helmet](https://img.shields.io/badge/Security-Helmet-pink.svg?style=flat-square)](src/core/Security.js)
 
+## What's new in 2.0?
+
+#### Support to MongoDB Cluster
+#### Automatically connect to all databases
+#### Enabled or disabled databases
+#### Improved the Docker or PM2 deploy
+#### New simple examples
+#### Fix some bugs
+
+
 ## Structure
 ```
 ├── .babelrc
@@ -22,12 +32,14 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
 ├── .gitignore
 ├── LICENSE
 ├── package.json
+├── pm2-deploy.yml
 ├── README.md
 └── src
     ├── api
     │   └── example
     │       ├── _index.js
-    │       ├── example.js
+    │       ├── mongo.js
+    │       ├── sql.js
     │       └── _validates
     │           └── example.validate.js
     ├── app.js
@@ -48,11 +60,14 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
     │   └── SSL.js
     ├── schemas
     │   ├── mongodb
-    │   │   └── example.js
+    │   │   ├── artists.js
+    │   │   └── musics.js
     │   ├── mysql
-    │   │   └── example.js
+    │   │   ├── artists.js
+    │   │   └── musics.js
     │   ├── postgres
-    │   │   └── example.js
+    │   │   ├── artists.js
+    │   │   └── musics.js
     │   └── ...
     ├── services
     │   └── example.js
@@ -85,14 +100,15 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
   
   # Run (local)
   npm run dev   # (Development mode)
-  npm run test  # (Mocha tests)
+  npm run test  # (Run tests)
   npm start     # (Production mode with pm2, build before)
   npm stop      # (Stop Production)
+  npm restart   # (Restart the api)
 
   # Deploy (Docker)
-  npm run deploy    # (Pull defined image and deploy docker container)
-  npm run undeploy  # (Stop and remove deployed container)
-  docker-compose    # (Others deployment options)
+  npm run start-docker  # (Pull image and deploy docker container)
+  npm run stop-docker   # (Stop deployed container)
+  docker-compose        # (Others deployment options)
 
   # To install docker-compose
   sudo apt install python python-pip

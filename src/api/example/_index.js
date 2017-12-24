@@ -1,11 +1,28 @@
 // Joi Validate
+import indexValidate from './_validates/index.validate';
 
-import exampleValidate from './_validates/example.validate';
-
-// Welcome Middleware
-import example from './example';
+// Example Middleware
+import exampleSql from './sql';
+import exampleMongo from './mongo';
 
 export default (route) => {
-    // You should put the module routes with middlewares here
-    route.get('/', exampleValidate, example)
+
+    /**
+     *  You should put the module routes with middlewares here
+     */
+
+    // Do this
+    route.get('/sql', indexValidate, exampleSql);
+    route.get('/mongo', indexValidate, exampleMongo);
+
+    // Do not this
+    route.get(
+        [
+            '/',
+            '/:name'
+        ],
+        (req, res) => {
+            res.api.send('Hello ' + (req.params.name ? req.params.name : 'anonymous'), res.api.codes.OK)
+        }
+    );
 };

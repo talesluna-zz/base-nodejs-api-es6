@@ -1,7 +1,6 @@
 /**
  * Use this class for all methods that synchronize and set routes for express app
  */
-import Response from '../core/Response';
 import path     from 'path';
 import fs       from 'fs'
 
@@ -17,7 +16,7 @@ export default class Routers {
          * Route Not Found Error
          */
         app.get('*', function(req, res){
-            Response.send(res, null, Response.NOT_FOUND, 'route_not_found');
+            res.api.send(null, res.api.codes.NOT_FOUND, 'route_not_found');
         });
 
         /**
@@ -25,7 +24,7 @@ export default class Routers {
          */
         app.use((err, req, res, next) => {
             if (err) {
-                Response.send(res, err.message, Response.INTERNAL_SERVER_ERROR);
+                res.api.send(err.message, res.api.codes.INTERNAL_SERVER_ERROR);
             }
             next();
         });

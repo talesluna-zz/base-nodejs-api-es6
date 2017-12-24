@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes){
-    const Example = sequelize.define('Example', {
+    const Artists = sequelize.define('Artists', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -14,5 +14,13 @@ module.exports = function(sequelize, DataTypes){
     }
     ).schema('public');
 
-    return Example;
+    Artists.associate = (models) => {
+        Artists.hasMany(models.Musics, {
+            onDelete: 'RESTRICT',
+            foreignKeyConstraint: true,
+            foreignKey: 'artistId'
+        });
+    };
+
+    return Artists;
 };

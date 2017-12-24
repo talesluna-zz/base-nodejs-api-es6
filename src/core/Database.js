@@ -22,6 +22,42 @@ export default class Database {
     }
 
     /**
+     * General database connection
+     * Public method to connect all databases automatically
+     * @param databases
+     * @param logging
+     */
+    connectDatabases(databases, logging = false) {
+        return new Promise((resolve) => {
+            Object.keys(databases).forEach(database => {
+
+                switch (databases[database].configWith) {
+
+                    // Configure this DB with sequelize
+                    case 'sequelize':
+
+                        this.connectSQL(databases[database], () => {
+                            console.log(logging ? `[${database}]\tConnection Success` : '');
+                        });
+                        break;
+
+                    // Configure this database with mongoose
+                    case 'mongoose':
+
+                        this.connectMongo(databases[database], () => {
+                            console.log(logging ? `[${database}]\tConnection Success` : '');
+                        });
+                        break;
+
+                    default:
+                        throw Error('unknown database configuration agent.');
+                }
+            });
+            setTimeout(resolve, 2000)
+        });
+    }
+
+    /**
      *
      * @param databaseConfig
      * @returns {Connection}
@@ -30,7 +66,7 @@ export default class Database {
     _connectInMongoDB(databaseConfig) {
         mongoose.Promise = global.Promise;
 
-        return mongoose.connection.openUri(this._createUri('mongodb', databaseConfig));
+        return mongoose.connection.openUri(this._createMongooseUri('mongodb', databaseConfig));
     }
 
     /**
@@ -58,7 +94,7 @@ export default class Database {
 
         // Create sequelize instance
         SequelizeConf[dialect].sequelize = new Sequelize(
-            this._createUri(dialect, databaseConfig),
+            this._createSequelizeUri(dialect, databaseConfig),
             {
                 charset: charset,
                 logging: logging
@@ -69,7 +105,11 @@ export default class Database {
         fs.readdirSync(path.join(__dirname, '../schemas/' + dialect))
             .forEach((schema) => {
                 const schemaName = schema.split('.js')[0].toLowerCase();
-                const model = SequelizeConf[dialect].sequelize.import(path.join(__dirname, '../schemas/' + dialect + '/' + schemaName));
+                const model = SequelizeConf[dialect]
+                    .sequelize
+                    .import(
+                        path.join(__dirname, '../schemas/' + dialect + '/' + schemaName)
+                    );
 
                 SequelizeConf[dialect].DB[model.name] = model;
             });
@@ -90,21 +130,49 @@ export default class Database {
                 logging: false
             }
         );
-
-        // return SequelizeConf[dialect].sequelize.authenticate({logging: false});
     }
 
     /**
-     * Return many URI connections based in SGBD drivers
+     * Create a connection URI for sequelize with simple usage
      * @param driver
      * @param config
      * @returns {string}
      * @private
      */
-    _createUri(driver, config) {
+    _createSequelizeUri(driver, config) {
         return  config.user.length
             ? `${driver}://${config.user}:${config.pass}@${config.host}:${config.port}/${config.name}`
             : `${driver}://${config.host}:${config.port}/${config.name}`;
+    }
+
+    /**
+     * Create a connection URI for mongoose, using cluster or not
+     * @param driver
+     * @param config
+     * @private
+     */
+    _createMongooseUri(driver, config) {
+
+        // Build URI options query
+        const authSource = config.authSource ? '&authSource=' + config.authSource : '';
+        const replicaSet = config.replicaSet ? '&replicaSet=' + config.replicaSet : '';
+        const options = `ssl=${config.ssl}${authSource}${replicaSet}`;
+
+        let servers = '';
+
+        // Concat all servers in array
+        config.servers.forEach((server, key) => {
+
+            // Set a delimiter when the servers is not last
+            const delimiter = key === config.servers.length - 1 ? '' : ',';
+
+            servers += `${server.host}:${server.port}${delimiter}`;
+        });
+
+        // Finish, concat the servers string to final URI string
+        return config.user.length
+            ? `${driver}://${config.user}:${config.pass}@${servers}/${config.name}?${options}`
+            : `${driver}://${config.servers}/${config.name}?${options}`;
     }
 
     /**
@@ -113,14 +181,15 @@ export default class Database {
      * @param success
      */
     connectMongo(databaseConfig, success) {
-        this._connectInMongoDB(databaseConfig)
-            .then(() => {
-                success();
-            })
-            .catch(err => {
-                console.log('[MongoDB Error] \n\n\t' + err.message + '\n\tEXIT\n');
-                process.exit(0);
-            });
+        if (databaseConfig.enabled)
+            this._connectInMongoDB(databaseConfig)
+                .then(() => {
+                    success();
+                })
+                .catch(err => {
+                    console.log('[MongoDB Error] \n\n\t' + err.message + '\n\tEXIT\n');
+                    process.exit(0);
+                });
     }
 
     /**
@@ -129,14 +198,15 @@ export default class Database {
      * @param success
      */
     connectSQL(databaseConfig, success) {
-        this._connectInSQLDialect(databaseConfig)
-            .then(() => {
-                success();
-            })
-            .catch(err => {
-                console.log('[SQL Error] \n\n\t' + err.message + '\n\tEXIT\n');
-                process.exit(0);
-            });
+        if (databaseConfig.enabled)
+            this._connectInSQLDialect(databaseConfig)
+                .then(() => {
+                    success();
+                })
+                .catch(err => {
+                    console.log('[SQL Error] \n\n\t' + err.message + '\n\tEXIT\n');
+                    process.exit(0);
+                });
     }
 
 }

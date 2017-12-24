@@ -10,8 +10,9 @@ export default class Security {
 
         // HTKP Keys
         const hpkpKeys = [
-            this.createSha256Time(),
-            this.createSha256Time()
+            // Like this, of example.key
+            'Lvw1UdqjGriHLTwS2ScPWNhEhhc5+2LTT2CT83eXsuU=',
+            'Lvw1UdqjGriHLTwS2ScPWNhEhhc5+2LTT2CT83eXsuU='
         ];
 
         // Require HTTPS
@@ -37,15 +38,5 @@ export default class Security {
         app.use(helmet.frameguard({
             action: 'same-origin'
         }))
-    }
-
-    /**
-     * Create random + time sha256|base64 digest
-     * @returns {Buffer | string}
-     */
-    createSha256Time() {
-        return crypto.createHash('sha256')
-            .update((new Date().getTime() * Math.random()).toString())
-            .digest('base64')
     }
 }

@@ -1,25 +1,40 @@
 /**
- * This class has exported instanced because
- * your one function is just send response in default structure
+ * This class make a express centralized response method
+ * this method is: res.api.send, injected in express response
+ * and can be used in any middlewares
  */
+let expressRes = null;
+
 class Response {
 
-    /**
-     * On construct than create response constants
-     */
-    constructor () {
+    constructor() {
         this._createConstants();
     }
 
     /**
+     * Inject the send method in Express
+     * Inject response codes in
+     */
+    setApp(app) {
+        app.use((req, res, next) => {
+
+            expressRes = res;
+            res.api = {
+                send: Response.send,
+                codes: this.codes
+            };
+            next()
+        })
+    }
+
+    /**
      * Use express an send HTTP response in JSON
-     * @param res
      * @param data
      * @param ResponseType
      * @param customMessage
      */
-    send(res, data, ResponseType, customMessage = null) {
-        return res.status(ResponseType.code).json(
+    static send(data, ResponseType, customMessage = null) {
+        return expressRes.status(ResponseType.code).json(
             {
                 code    : ResponseType.code,
                 data    : data,
@@ -29,31 +44,37 @@ class Response {
     }
 
     /**
-     * Response constants, follow HTTP patterns
+     * Response constants, using HTTP patterns
      * @private
      */
     _createConstants() {
-        this.CREATED = {
-            code: 201,
-            message: 'success_on_create'
-        };
-        this.NOT_FOUND = {
-            code: 404,
-            message: 'fail_on_find'
-        };
-        this.INTERNAL_SERVER_ERROR = {
-            code: 500,
-            message: 'internal_server_error'
-        };
-        this.FOUND = {
-            code: 302,
-            message: 'success_on_find'
-        };
-        this.OK = {
-            code: 200,
-            message: 'success'
+        this.codes = {
+            BAD_REQUEST: {
+                code: 400,
+                message: 'bad_request'
+            },
+            CREATED: {
+                code: 201,
+                message: 'created'
+            },
+            NOT_FOUND: {
+                code: 404,
+                message: 'not_found'
+            },
+            INTERNAL_SERVER_ERROR: {
+                code: 500,
+                message: 'internal_server_error'
+            },
+            FOUND: {
+                code: 302,
+                message: 'found'
+            },
+            OK: {
+                code: 200,
+                message: 'success'
+            }
         }
     }
 }
 
-export default new Response();
+export default Response;

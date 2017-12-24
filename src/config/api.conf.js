@@ -10,8 +10,24 @@ export default class ApiConfig {
         this._loadEnvironment();
     }
 
+    /**
+     * Load the environment file using system env variable
+     * @private
+     */
     _loadEnvironment() {
         this.envname = process.env.NODE_ENV;
         this.env = require('./env/' + this.envname + '.env.js');
+    }
+
+    /**
+     * Return the loaded environment / config
+     * @returns {any | *}
+     */
+    getEnv() {
+        return this.env;
+    }
+
+    getEnvName() {
+        return this.envname;
     }
 }

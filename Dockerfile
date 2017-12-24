@@ -1,16 +1,13 @@
-FROM node:alpine
+FROM node:stretch
 
 # Create app directory
-RUN mkdir -p /usr/src/service
-WORKDIR /usr/src/service
+RUN mkdir -p /opt/services/api_name
+WORKDIR /opt/services/api_name
 
 # Here go all logs
 RUN mkdir -p storage/logs/app
 RUN chmod 777 storage/logs/app
 
-# Install dependencies
-RUN npm install -g pm2
-
 # Start service
-EXPOSE 3000
+EXPOSE 3001
 CMD [ "sh" ]

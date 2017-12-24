@@ -1,7 +1,7 @@
 module.exports = {
     app: {
         name: 'API Name - DEV MODE',
-        version: '1.0.2'
+        version: '1.1.0'
     },
     server: {
         secure: true,
@@ -14,35 +14,60 @@ module.exports = {
         }
     },
     databases: {
+
+        // MongoDB with support a cluster
         mongodb: {
-            host: 'localhost',
-            port: 27017,
-            user: 'username',
-            pass: 'password',
-            name: 'example?authSource=admin',
-            dialect: 'mongodb',
-            charset: 'utf8',
-            logging: true
+            servers: [
+                {
+                    host: 'cluster0-shard-00-00-gbhki.mongodb.net',
+                    port: 27017
+                },
+                {
+                    host: ' cluster0-shard-00-01-gbhki.mongodb.net',
+                    port :27017
+                },
+                {
+                    host: 'cluster0-shard-00-02-gbhki.mongodb.net',
+                    port: 27017
+                }
+            ],
+            replicaSet  : 'Cluster0-shard-0',
+            authSource  : 'admin',
+            ssl         : true,
+            user        : 'talesluna',
+            pass        : '8613$$',
+            name        : 'example',
+            dialect     : 'mongodb',
+            charset     : 'utf8',
+            logging     : true,
+            enabled     : true,
+            configWith  : 'mongoose'
         },
+
+        // SQL with default usage
         mysql: {
-            host: 'localhost',
-            port: 3306,
-            user: 'admin',
-            pass: 'admin',
-            name: 'example',
-            dialect: 'mysql',
-            charset: 'utf8',
-            logging: true
+            host        : 'localhost',
+            port        : 3306,
+            user        : 'admin',
+            pass        : 'admin',
+            name        : 'example',
+            dialect     : 'mysql',
+            charset     : 'utf8',
+            logging     : true,
+            enabled     : false,
+            configWith  : 'sequelize'
         },
-        postgres: {
-            host: 'localhost',
-            port: 5432,
-            user: 'admin',
-            pass: 'admin',
-            name: 'example',
-            dialect: 'postgres',
-            charset: 'utf8',
-            logging: true
+        postgres        : {
+            host        : 'localhost',
+            port        : 5432,
+            user        : 'admin',
+            pass        : 'admin',
+            name        : 'example',
+            dialect     : 'postgres',
+            charset     : 'utf8',
+            logging     : true,
+            enabled     : false,
+            configWith  : 'sequelize'
         }
     }
 };

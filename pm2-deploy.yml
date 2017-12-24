@@ -1,0 +1,8 @@
+apps:
+  - script      : dist/app.js
+    name        : api_name
+    instances   : 2
+    exec_mode   : cluster
+    watch       : true
+    env         :
+      NODE_ENV  : production
