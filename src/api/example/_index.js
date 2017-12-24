@@ -1,3 +1,6 @@
+// Services
+import exampleService from '../../services/example.service';
+
 // Joi Validate
 import indexValidate from './_validates/index.validate';
 
@@ -22,7 +25,10 @@ export default (route) => {
             '/:name'
         ],
         (req, res) => {
-            res.api.send('Hello ' + (req.params.name ? req.params.name : 'anonymous'), res.api.codes.OK)
+
+            const myData = `Hello ${(req.params.name ? req.params.name : 'anonymous')}. ${exampleService.getExample()}`;
+
+            res.api.send(myData, res.api.codes.OK)
         }
     );
 };

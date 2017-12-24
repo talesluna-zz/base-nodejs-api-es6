@@ -5,8 +5,8 @@
  * DO NOT THIS usually
  */
 
-import Artists  from '../../schemas/mongodb/artists';
-import Musics   from '../../schemas/mongodb/musics';
+import Artists  from '../../models/mongodb/artists';
+import Musics   from '../../models/mongodb/musics';
 
 export default (req, res) => {
 
