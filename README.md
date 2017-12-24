@@ -3,7 +3,7 @@
 This is a simple and basic structure for deploy API using ExpressJs and NodeJs with docker deploy, easily and quickly.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![node](https://img.shields.io/badge/NodeJS-8-green.svg?style=flat-square)]()
+[![node](https://img.shields.io/badge/NodeJS-9.x-green.svg?style=flat-square)]()
 [![es6](https://img.shields.io/badge/ES6-Babel-blue.svg?style=flat-square)](.babelrc)
 [![docker](https://img.shields.io/badge/Containers-Docker-blue.svg?style=flat-square)](Dockerfile)
 [![pm2](https://img.shields.io/badge/Local-PM2-lightgray.svg?style=flat-square)](pm2-deploy.yml)
