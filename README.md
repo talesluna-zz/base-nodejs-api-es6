@@ -71,6 +71,7 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
     │   │   └── musics.js
     │   └── ...
     ├── services
+    │   ├── service.js
     │   └── example.service.js
     ├── storage
     │   ├── certificates
