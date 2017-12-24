@@ -11,14 +11,14 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
 [![ssl](https://img.shields.io/badge/SSL-HTTPS-green.svg?style=flat-square)](src/core/SSL.js)
 [![helmet](https://img.shields.io/badge/Security-Helmet-pink.svg?style=flat-square)](src/core/Security.js)
 
-## What's new in 2.0?
+### What's new in 2.0?
 
-#### Support to MongoDB Cluster
-#### Automatically connect to all databases
-#### Enabled or disabled databases
-#### Improved the Docker or PM2 deploy
-#### New simple examples
-#### Fix some bugs
+- Support to MongoDB Cluster
+- Automatically connect to all databases
+- Enabled or disabled databases
+- Improved the Docker or PM2 deploy
+- New simple examples
+- Fix some bugs
 
 
 ## Structure
