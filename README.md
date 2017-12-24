@@ -59,7 +59,7 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
     │   ├── Routers.js
     │   ├── Security.js
     │   └── SSL.js
-    ├── schemas
+    ├── models
     │   ├── mongodb
     │   │   ├── artists.js
     │   │   └── musics.js

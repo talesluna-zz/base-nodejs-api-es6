@@ -101,14 +101,14 @@ export default class Database {
             }
         );
 
-        // Synchronize schemas in dir to sequelize
+        // Synchronize models in dir to sequelize
         fs.readdirSync(path.join(__dirname, '../models/' + dialect))
-            .forEach((schema) => {
-                const schemaName = schema.split('.js')[0].toLowerCase();
+            .forEach((modelFile) => {
+                const modelName = modelFile.split('.js')[0].toLowerCase();
                 const model = SequelizeConf[dialect]
                     .sequelize
                     .import(
-                        path.join(__dirname, '../models/' + dialect + '/' + schemaName)
+                        path.join(__dirname, '../models/' + dialect + '/' + modelName)
                     );
 
                 SequelizeConf[dialect].DB[model.name] = model;
@@ -123,7 +123,7 @@ export default class Database {
                 }
             });
 
-        // Sync schemas to database
+        // Sync models to database
         return SequelizeConf[dialect].sequelize.sync(
             {
                 force: process.env.NODE_ENV !== 'production',
