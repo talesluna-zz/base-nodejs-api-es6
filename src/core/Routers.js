@@ -7,9 +7,20 @@ import fs       from 'fs'
 export default class Routers {
 
     syncRouters(app) {
+
+        // Regex for detect hidden paths and files in unix and unix-like systems
+        const unixHidden = new RegExp(/^\..*/);
+
         fs.readdirSync(path.join(__dirname, '../api'))
             .forEach((module) => {
-                require(path.join(__dirname, `../api/${module}/_index`)).default(app);
+
+                // Module index file, should exists to import
+                const moduleIndex = path.join(__dirname, `../api/${module}/_index.js`);
+
+                // Load module if path is not hidden and index file exists
+                if (!unixHidden.test(module.toString()) && fs.existsSync(moduleIndex))
+                    require(moduleIndex).default(app);
+
             });
 
         /**
