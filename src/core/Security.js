@@ -1,19 +1,16 @@
 import helmet from 'helmet';
-import crypto from 'crypto';
 
 export default class Security {
 
-    makeSecure(app) {
+    /**
+     * Use Helmet to make ExpressJS app more secure
+     * @param app
+     * @param hpkpKeys
+     */
+    makeSecure(app, hpkpKeys = []) {
 
         // 1 Day in seconds
         const oneDay = 86400;
-
-        // HTKP Keys
-        const hpkpKeys = [
-            // Like this, of example.key
-            'Lvw1UdqjGriHLTwS2ScPWNhEhhc5+2LTT2CT83eXsuU=',
-            'Lvw1UdqjGriHLTwS2ScPWNhEhhc5+2LTT2CT83eXsuU='
-        ];
 
         // Require HTTPS
         app.use(helmet.hsts({
@@ -21,10 +18,13 @@ export default class Security {
         }));
 
         // Prevent MITM (Man in the middle attack)
-        app.use(helmet.hpkp({
-            maxAge: oneDay,
-            sha256s: hpkpKeys
-        }));
+        if (hpkpKeys.length > 2) {
+            app.use(helmet.hpkp({
+                maxAge  : oneDay,
+                sha256s : null
+            }));
+        }
+
 
         // No referrer
         app.use(helmet.referrerPolicy({

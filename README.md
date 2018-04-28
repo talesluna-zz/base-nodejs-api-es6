@@ -1,6 +1,6 @@
-# Basic structure for REST API with ExpressJS/NodeJS and Docker integration.
+# REST API with ExpressJS/NodeJS and Docker integration.
 
-This is a simple and basic structure for deploy API using ExpressJs and NodeJs with docker deploy, easily and quickly.
+This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily and quickly.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![node](https://img.shields.io/badge/NodeJS-9.x-green.svg?style=flat-square)]()
@@ -14,71 +14,78 @@ This is a simple and basic structure for deploy API using ExpressJs and NodeJs w
 
 ### What's new in 2.0?
 
+- Sequelize and Mongoose paginate method
 - Support to MongoDB Cluster
 - Automatically connect to all databases
 - Enabled or disabled databases
-- Improved the Docker or PM2 deploy
-- New simple examples
-- Fix some bugs
+- Improved Docker or PM2 deploy
+- New examples
+- SSL independent
+- Unprocessable Entity response (422)
+- Fix bugs
 
 
 ## Structure
 ```
-├── .babelrc
-├── docker-compose.yml
+.
 ├── Dockerfile
-├── .dockerignore
-├── .eslintrc.js
-├── .eslintignore
-├── .gitignore
 ├── LICENSE
+├── README.md
+├── docker-compose.yml
 ├── package.json
 ├── pm2-deploy.yml
-├── README.md
 └── src
     ├── api
-    │   └── example
+    │   ├── artists
+    │   │   ├── _index.js
+    │   │   ├── _validates
+    │   │   │   ├── create.validate.js
+    │   │   │   └── update.validate.js
+    │   │   ├── create.js
+    │   │   ├── read.js
+    │   │   ├── readOne.js
+    │   │   └── update.js
+    │   └── musics
     │       ├── _index.js
-    │       ├── mongo.js
-    │       ├── sql.js
-    │       └── _validates
-    │           └── example.validate.js
+    │       ├── _validates
+    │       │   ├── create.validate.js
+    │       │   └── update.validate.js
+    │       ├── create.js
+    │       ├── read.js
+    │       ├── readOne.js
+    │       └── update.js
     ├── app.js
     ├── config
     │   ├── api.conf.js
-    │   ├── sequelize.conf.js
-    │   └── env
-    │       ├── development.env.js
-    │       ├── production.env.js
-    │       └── test.env.js
+    │   ├── env
+    │   │   ├── development.env.js
+    │   │   ├── production.env.js
+    │   │   └── test.env.js
+    │   └── sequelize.conf.js
     ├── core
     │   ├── Cors.js
     │   ├── Database.js
+    │   ├── Paginate.js
     │   ├── RequestQuery.js
     │   ├── Response.js
     │   ├── Routers.js
-    │   ├── Security.js
-    │   └── SSL.js
+    │   ├── SSL.js
+    │   └── Security.js
     ├── models
     │   ├── mongodb
-    │   │   ├── artists.js
-    │   │   └── musics.js
+    │   │   └── artists.js
     │   ├── mysql
-    │   │   ├── artists.js
-    │   │   └── musics.js
-    │   ├── postgres
-    │   │   ├── artists.js
-    │   │   └── musics.js
-    │   └── ...
+    │   │   └── musics.js
+    │   └── postgres
+    │       ├── artists.js
+    │       └── musics.js
     ├── services
-    │   ├── service.js
-    │   └── example.service.js
+    │   ├── Example.service.js
+    │   └── Service.js
     ├── storage
-    │   ├── certificates
-    │   │   ├── example.crt
-    │   │   └── example.key
-    │   ├── logs
-    │   └── static
+    │   └── certificates
+    │       ├── ssl.crt
+    │       └── ssl.key
     └── tests
         └── api
             └── example.test.js

@@ -1,14 +1,18 @@
+/* eslint-disable id-length */
 /**
  * This class make a express centralized response method
  * this method is: res.api.send, injected in express response
  * and can be used in any middlewares
  */
+
+import * as HttpStatus from 'http-status-codes';
+import _ from 'lodash';
+
 let expressRes = null;
 
 class Response {
 
     constructor() {
-        this._createConstants();
     }
 
     /**
@@ -20,8 +24,9 @@ class Response {
 
             expressRes = res;
             res.api = {
-                send: Response.send,
-                codes: this.codes
+                req: req,
+                send : Response.send,
+                codes: HttpStatus
             };
             next()
         })
@@ -30,50 +35,49 @@ class Response {
     /**
      * Use express an send HTTP response in JSON
      * @param data
-     * @param ResponseType
+     * @param responseCode
+     * @param metadata
      * @param customMessage
      */
-    static send(data, ResponseType, customMessage = null) {
-        return expressRes.status(ResponseType.code).json(
+    static send(data, responseCode, metadata = {}, customMessage = null) {
+
+        // Send response to request
+        return expressRes.status(responseCode).json(
             {
-                code    : ResponseType.code,
+                code    : responseCode,
                 data    : data,
-                message : customMessage ? customMessage : ResponseType.message
+                message : customMessage ? customMessage : Response._getStatusMessage(responseCode),
+                metadata: Response._generateResponseMetadata(metadata)
             }
         );
     }
 
     /**
-     * Response constants, using HTTP patterns
+     * Return default message of status codes
+     * @param statusCode
+     * @returns {string}
      * @private
      */
-    _createConstants() {
-        this.codes = {
-            BAD_REQUEST: {
-                code: 400,
-                message: 'bad_request'
-            },
-            CREATED: {
-                code: 201,
-                message: 'created'
-            },
-            NOT_FOUND: {
-                code: 404,
-                message: 'not_found'
-            },
-            INTERNAL_SERVER_ERROR: {
-                code: 500,
-                message: 'internal_server_error'
-            },
-            FOUND: {
-                code: 302,
-                message: 'found'
-            },
-            OK: {
-                code: 200,
-                message: 'success'
-            }
-        }
+    static _getStatusMessage(statusCode) {
+        return Object
+            .keys(HttpStatus)[Object.values(HttpStatus).indexOf(statusCode)]
+            .toLowerCase();
+    }
+
+    /**
+     * Generate metadata for all responses
+     * @private
+     */
+    static _generateResponseMetadata(customMetadata = {}) {
+
+        // Default response metadata
+        // Increment default fields here
+        const defaultMetadata = {
+            responseAt: new Date().toISOString()
+        };
+
+        // Return merge of custom and default metadata
+        return _.merge(defaultMetadata, customMetadata);
     }
 }
 

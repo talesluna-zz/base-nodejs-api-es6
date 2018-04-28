@@ -3,10 +3,13 @@ import express      from 'express';
 import bodyParser   from 'body-parser';
 import compression  from 'compression';
 import morgan       from 'morgan';
-import https        from 'https';
 
 // Config
 import ApiConfig    from './config/api.conf';
+
+// Define environment object
+const config        = new ApiConfig();
+const environment   = config.getEnv();
 
 // Core
 import Cors         from './core/Cors';
@@ -19,20 +22,16 @@ import Response     from './core/Response';
 
 // Classes & app
 const app           = express();
-const config        = new ApiConfig();
 const cors          = new Cors();
 const routers       = new Routers();
 const database      = new Database();
 const requestQuery  = new RequestQuery();
-const ssl           = new SSL().getCredentials();
+const ssl           = new SSL();
 const security      = new Security();
 const response      = new Response();
 
 // Set express app in Response class
 response.setApp(app);
-
-// Define environment object
-const environment = config.getEnv();
 
 /**
  * Use routes in app
@@ -68,15 +67,24 @@ const _setupCors = () => {
  */
 const _setupDatabase = () => {
 
+    // Define cors headers
     _setupCors();
 
+    // Connect to databases
     if (Object.keys(environment.databases).length) {
-        database.connectDatabases(
-            environment.databases,
-            config.getEnvName() !== 'test'
-        ).then(() => {
-            _setupRouters();
-        });
+
+        database
+            .connectDatabases(
+                environment.databases,
+                config.getEnvName() !== 'test'
+            )
+            .then(() => {
+                return _setupRouters();
+            })
+            .catch(err => {
+                throw err
+            });
+
     } else {
         _appLog('[!]\t No database to connect.');
         _setupRouters();
@@ -102,16 +110,16 @@ if (config.getEnvName() !== 'test') {
     app.use(morgan(config.getEnvName() === 'development'? 'dev' : 'combined'));
 }
 
-// Express global usages and middlewares
+// Express global usages and middleware
 app.use(bodyParser.json());
 app.use(requestQuery.parseQuery);
-app.use(compression());
+app.use(compression({threshold : 100}));
 
-// Security middlewares with helmet
-security.makeSecure(app);
+// Security middleware with helmet
+security.makeSecure(app, environment.server.ssl.hpkpKeys);
 
 // Create secure server or insecure server (see your *.env.js)
-const server = environment.server.secure && ssl.cert ? https.createServer(ssl, app) : app;
+const server = environment.server.secure ? ssl.getHTTPSServer(app, environment.server.ssl) : app;
 
 // Listen server
 server.listen(environment.server.port, environment.server.host, _listenSuccess);

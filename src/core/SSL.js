@@ -1,45 +1,43 @@
-import fs from 'fs';
-import path from 'path';
+import fs       from 'fs';
+import https    from 'https';
 
 export default class SSL {
-    constructor () {
 
-        /**
-         * File of private key and certificate
-         * @type {{privateKey: (string|*), certificate: (string|*)}}
-         */
-        this.files = {
-            privateKey  : path.join(__dirname, '../storage/certificates/example.key'),
-            certificate : path.join(__dirname, '../storage/certificates/example.crt')
-        };
+    /**
+     * Create and return HTTPS server with SSL configurations
+     * @param app
+     * @param config
+     * @returns {"http".Server | "http2".Http2Server}
+     */
+    getHTTPSServer(app, config) {
 
-        /**
-         * THis object is a ssl options for http server
-         * @type {{key: *, cert: *, requestCert: boolean, rejectUnauthorized: boolean}}
-         */
-        this.credentials = {
-            key: this._readCertAndKey(this.files.privateKey),
-            cert: this._readCertAndKey(this.files.certificate),
-            requestCert: true,
-            rejectUnauthorized: false
-        };
+        // Verify integrity of SSL configuration
+        if (!config || !config.privateKey || !config.certificate) {
+            throw Error('Invalid SSL configuration!');
+        }
+
+        return https.createServer(
+            {
+                key                 : this._readCertAndKey(config.privateKey),
+                cert                : this._readCertAndKey(config.certificate),
+                requestCert         : true,
+                rejectUnauthorized  : false
+            },
+            app
+        )
     }
 
     /**
      * Read private key and certificate files
      * @param file
-     * @returns {any}
+     * @returns {Buffer | string | (string | Buffer)}
      * @private
      */
     _readCertAndKey(file) {
-        return fs.existsSync(file) ? fs.readFileSync(file, 'utf-8') : null;
-    }
+        if (fs.existsSync(file))
+            return fs.readFileSync(file, 'utf-8');
 
-    /**
-     * Return created ssl options
-     * @returns {{key: *, cert: *, requestCert: boolean, rejectUnauthorized: boolean}}
-     */
-    getCredentials() {
-        return this.credentials;
+        // Throw error if file to ssl key or crt not exists
+        throw Error('[SSL Error] File Not Found - ' + file)
     }
 }

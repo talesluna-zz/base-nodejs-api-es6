@@ -6,6 +6,10 @@ import fs       from 'fs'
 
 export default class Routers {
 
+    /**
+     * Synchronize routes for express app
+     * @param app
+     */
     syncRouters(app) {
 
         // Regex for detect hidden paths and files in unix and unix-like systems
@@ -27,7 +31,7 @@ export default class Routers {
          * Route Not Found Error
          */
         app.get('*', function(req, res){
-            res.api.send(null, res.api.codes.NOT_FOUND, 'route_not_found');
+            res.api.send(null, res.api.codes.NOT_FOUND, null, 'route_not_found');
         });
 
         /**
