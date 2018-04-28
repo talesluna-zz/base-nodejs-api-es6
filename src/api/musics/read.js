@@ -1,21 +1,17 @@
 /* eslint-disable id-length */
-import Artists from '../../models/mongodb/artists';
+import {mysql} from '../../config/sequelize.conf';
 
 export default (req, res) => {
 
     /**
-     * Find all registers of Artist collection
+     * Find all registers of Musics model
      */
-    Artists
+    mysql.DB.Musics
         .paginate(
-            [
-                {
-                    $match: req.query.where
-                },
-                {
-                    $project: req.query.project
-                }
-            ],
+            {
+                where       : req.query.where,
+                attributes  : req.query.select
+            },
             req.query.limit,
             req.query.page
         )

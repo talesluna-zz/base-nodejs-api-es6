@@ -1,16 +1,14 @@
 /* eslint-disable id-length */
-import Artists  from '../../models/mongodb/artists';
+import {mysql} from '../../config/sequelize.conf';
 
 export default (req, res) => {
 
     // Create new artist by req.body data
-    Artists
+    mysql.DB.Musics
         .update(
+            req.body,
             {
-                _id: req.params._id
-            },
-            {
-                $set: req.body
+                where: {id: req.params._id}
             }
         )
         .then(update => {
