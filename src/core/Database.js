@@ -140,7 +140,8 @@ export default class Database {
         // Sync models to database
         return SequelizeConf[dialect].sequelize.sync(
             {
-                force: process.env.NODE_ENV !== 'production',
+                // process.env.NODE_ENV !== 'production'
+                force: false,
                 logging: false
             }
         );
