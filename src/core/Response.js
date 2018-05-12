@@ -8,8 +8,6 @@
 import * as HttpStatus from 'http-status-codes';
 import _ from 'lodash';
 
-let expressRes = null;
-
 class Response {
 
     constructor() {
@@ -21,9 +19,8 @@ class Response {
      */
     setApp(app) {
         app.use((req, res, next) => {
-
-            expressRes = res;
             res.api = {
+                res: res,
                 req: req,
                 send : Response.send,
                 codes: HttpStatus
@@ -40,9 +37,8 @@ class Response {
      * @param customMessage
      */
     static send(data, responseCode, metadata = {}, customMessage = null) {
-
         // Send response to request
-        return expressRes.status(responseCode).json(
+        return this.res.status(responseCode).json(
             {
                 code    : responseCode,
                 data    : data,
