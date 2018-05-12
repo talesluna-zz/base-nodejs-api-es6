@@ -123,3 +123,10 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
   sudo apt install python python-pip
   sudo pip install docker-compose
   ```
+
+## Contributors
+|[<img src="https://avatars2.githubusercontent.com/u/13393772?v=4" width="80px;"/><br><sub><b>Tales Luna</b></sub>](https://github.com/talesluna/)|[<img src="https://avatars0.githubusercontent.com/u/26255600?v=4" width="80px;"/><br><sub><b>Wanber Silva</b></sub>](https://github.com/wanber/) |
+|---|---|
+| 🖥| 💡|
+
+
