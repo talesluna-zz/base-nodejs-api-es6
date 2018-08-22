@@ -33,56 +33,68 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 ├── pm2-deploy.yml
 └── src
     ├── api
-    │   ├── artists
-    │   │   ├── _index.js
-    │   │   ├── _validates
-    │   │   │   ├── create.validate.js
-    │   │   │   └── update.validate.js
-    │   │   ├── create.js
-    │   │   ├── read.js
-    │   │   ├── readOne.js
-    │   │   └── update.js
-    │   └── musics
-    │       ├── _index.js
-    │       ├── _validates
-    │       │   ├── create.validate.js
-    │       │   └── update.validate.js
-    │       ├── create.js
-    │       ├── read.js
-    │       ├── readOne.js
-    │       └── update.js
+    │   ├── artists
+    │   │   ├── _index.js
+    │   │   ├── _validates
+    │   │   │   ├── create.validate.js
+    │   │   │   └── update.validate.js
+    │   │   ├── create.js
+    │   │   ├── read.js
+    │   │   ├── readOne.js
+    │   │   └── update.js
+    │   └── musics
+    │       ├── _index.js
+    │       ├── _validates
+    │       │   ├── create.validate.js
+    │       │   └── update.validate.js
+    │       ├── create.js
+    │       ├── read.js
+    │       ├── readOne.js
+    │       └── update.js
     ├── app.js
     ├── config
-    │   ├── api.conf.js
-    │   ├── env
-    │   │   ├── development.env.js
-    │   │   ├── production.env.js
-    │   │   └── test.env.js
-    │   └── sequelize.conf.js
+    │   ├── api.conf.js
+    │   ├── env
+    │   │   ├── development.env.js
+    │   │   ├── production.env.js
+    │   │   └── test.env.js
+    │   ├── joi
+    │   │   └── joi.conf.js
+    │   ├── mongoose
+    │   │   └── mongoose.conf.js
+    │   └── sequelize
+    │       └── sequelize.conf.js
     ├── core
-    │   ├── Cors.js
-    │   ├── Database.js
-    │   ├── Paginate.js
-    │   ├── RequestQuery.js
-    │   ├── Response.js
-    │   ├── Routers.js
-    │   ├── SSL.js
-    │   └── Security.js
+    │   ├── Database.js
+    │   ├── Headers.js
+    │   ├── Locales.js
+    │   ├── Paginate.js
+    │   ├── RequestQuery.js
+    │   ├── Response.js
+    │   ├── Routers.js
+    │   ├── SSL.js
+    │   ├── Security.js
+    │   └── Validator.js
     ├── models
-    │   ├── mongodb
-    │   │   └── artists.js
-    │   ├── mysql
-    │   │   └── musics.js
-    │   └── postgres
-    │       ├── artists.js
-    │       └── musics.js
+    │   ├── mongodb
+    │   │   └── artists.js
+    │   ├── mysql
+    │   │   └── musics.js
+    │   └── postgres
+    │       ├── artists.js
+    │       └── musics.js
     ├── services
-    │   ├── Example.service.js
-    │   └── Service.js
+    │   ├── Example.service.js
+    │   └── Service.js
     ├── storage
-    │   └── certificates
-    │       ├── ssl.crt
-    │       └── ssl.key
+    │   ├── certificates
+    │   │   ├── ssl.crt
+    │   │   └── ssl.key
+    │   └── locales
+    │       ├── joi
+    │       │   └── pt_BR.js
+    │       └── mongoose
+    │           └── pt_BR.js
     └── tests
         └── api
             └── example.test.js
