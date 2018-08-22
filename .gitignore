@@ -7,3 +7,4 @@ dist
 releases
 node_modules/
 storage/logs
+src/config/env/*.env.js
