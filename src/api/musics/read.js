@@ -1,16 +1,17 @@
-/* eslint-disable id-length */
-import {mysql} from '../../config/sequelize.conf';
+import {mysql} from '../../config/sequelize/sequelize.conf';
 
 export default (req, res) => {
+
+    const {Musics} = mysql.DB;
 
     /**
      * Find all registers of Musics model
      */
-    mysql.DB.Musics
+    Musics
         .paginate(
             {
-                where       : req.query.where,
-                attributes  : req.query.select
+                where     : req.query.where,
+                attributes: req.query.select
             },
             req.query.limit,
             req.query.page
@@ -25,8 +26,7 @@ export default (req, res) => {
             return res.api.send(result.data, res.api.codes.OK, {paginate: result.paginate});
         })
         .catch(err => {
-            return res.api.send(err.message, res.api.codes.INTERNAL_SERVER_ERROR);
+            return res.api.send(err, res.api.codes.INTERNAL_SERVER_ERROR);
         })
 
-
-}
+};

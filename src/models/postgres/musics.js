@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes){
+export default (sequelize, DataTypes) => {
     const Musics = sequelize.define('Musics', {
         id: {
             type: DataTypes.UUID,
@@ -17,10 +17,11 @@ module.exports = function(sequelize, DataTypes){
         },
         albumName: {
             type: DataTypes.STRING,
-            defaultValue: 'Independent'
+            defaultValue: 'unknown'
         },
         artistId: {
-            type: DataTypes.UUID
+            type: DataTypes.UUID,
+            allowNull: false
         }
     }
     ).schema('public');

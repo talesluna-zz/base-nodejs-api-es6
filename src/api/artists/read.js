@@ -1,5 +1,6 @@
-/* eslint-disable id-length */
-import Artists from '../../models/mongodb/artists';
+import {models} from 'mongoose';
+
+const {Artists} = models;
 
 export default (req, res) => {
 
@@ -21,16 +22,15 @@ export default (req, res) => {
         )
         .then(result => {
 
-            // If no have data send a not found response
             if (!result.data.length) {
                 return res.api.send(null, res.api.codes.NOT_FOUND);
             }
 
             return res.api.send(result.data, res.api.codes.OK, {paginate: result.paginate});
+
         })
         .catch(err => {
-            return res.api.send(err.message, res.api.codes.INTERNAL_SERVER_ERROR);
-        })
+            return res.api.send(err, res.api.codes.INTERNAL_SERVER_ERROR);
+        });
 
-
-}
+};

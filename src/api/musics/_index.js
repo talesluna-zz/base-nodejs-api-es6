@@ -1,6 +1,6 @@
 // Joi Validate
-import createValidade from './_validates/create.validate';
-import updateValidade from './_validates/update.validate';
+import createValidate from './_validates/create.validate';
+import updateValidate from './_validates/update.validate';
 
 // Example Middleware
 import create   from './create';
@@ -12,13 +12,13 @@ export default (route) => {
 
     // Route to create new music
     route.post('/musics', [
-        createValidade,
+        createValidate,
         create
     ]);
 
     // Route to update existent music
     route.put('/musics/:_id', [
-        updateValidade,
+        updateValidate,
         update
     ]);
 

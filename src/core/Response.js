@@ -10,8 +10,7 @@ import _ from 'lodash';
 
 class Response {
 
-    constructor() {
-    }
+    constructor() {}
 
     /**
      * Inject the send method in Express
@@ -37,15 +36,19 @@ class Response {
      * @param customMessage
      */
     static send(data, responseCode, metadata = {}, customMessage = null) {
+
         // Send response to request
-        return this.res.status(responseCode).json(
-            {
-                code    : responseCode,
-                data    : data,
-                message : customMessage ? customMessage : Response._getStatusMessage(responseCode),
-                metadata: Response._generateResponseMetadata(metadata)
-            }
-        );
+        return this.res
+            .status(responseCode)
+            .json(
+                {
+                    code    : responseCode,
+                    data    : data,
+                    message : customMessage ? customMessage : Response._getStatusMessage(responseCode),
+                    metadata: Response._generateResponseMetadata(this.req, metadata)
+                }
+            );
+
     }
 
     /**
@@ -64,12 +67,13 @@ class Response {
      * Generate metadata for all responses
      * @private
      */
-    static _generateResponseMetadata(customMetadata = {}) {
-
+    static _generateResponseMetadata(expressReq, customMetadata = {}) {
         // Default response metadata
         // Increment default fields here
         const defaultMetadata = {
-            responseAt: new Date().toISOString()
+            responseAt: new Date().toISOString(),
+            method: expressReq.method,
+            route: expressReq.originalUrl
         };
 
         // Return merge of custom and default metadata

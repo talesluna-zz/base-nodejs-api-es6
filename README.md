@@ -12,16 +12,13 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 [![ssl](https://img.shields.io/badge/SSL-HTTPS-green.svg?style=flat-square)](src/core/SSL.js)
 [![helmet](https://img.shields.io/badge/Security-Helmet-pink.svg?style=flat-square)](src/core/Security.js)
 
-### What's new in 2.0?
+### What's new in 2.2.0?
 
-- Sequelize and Mongoose paginate method
-- Support to MongoDB Cluster
-- Automatically connect to all databases
-- Enabled or disabled databases
-- Improved Docker or PM2 deploy
-- New examples
-- SSL independent
-- Unprocessable Entity response (422)
+- Locales (configure your locale messages for Joi and Mongoose)
+- New configs schema
+- Update dependencies
+- New model sync engine for mongoose
+- Some improvements
 - Fix bugs
 
 

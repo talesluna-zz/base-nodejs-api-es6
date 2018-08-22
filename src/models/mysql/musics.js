@@ -1,5 +1,5 @@
-/* eslint-disable array-element-newline,new-cap */
-module.exports = function(sequelize, DataTypes){
+/* eslint-disable array-element-newline */
+export default (sequelize, DataTypes) => {
     return sequelize.define('Musics', {
         id: {
             primaryKey  : true,
@@ -10,23 +10,24 @@ module.exports = function(sequelize, DataTypes){
         },
         name: {
             type        : DataTypes.STRING,
-            allowNull   : false
+            allowNull   : false,
+            required    : true
         },
         duration: {
             type        : DataTypes.FLOAT,
-            allowNull   : false
+            allowNull   : true,
+            required    : true
         },
         albumName: {
             type        : DataTypes.STRING,
             defaultValue: 'unknown',
-            allowNull   : false
+            lowercase   : true
         },
         _artistId: {
-            type        : DataTypes.STRING(24),
+            type        : DataTypes.STRING,
             allowNull   : false,
             validate    : {
-                // Mongo ObjectID
-                len: [24, 24]
+                len: [0, 24]
             }
         }
     });

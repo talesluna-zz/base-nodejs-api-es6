@@ -1,5 +1,6 @@
-/* eslint-disable id-length */
-import Artists  from '../../models/mongodb/artists';
+import {models} from 'mongoose';
+
+const {Artists} = models;
 
 export default (req, res) => {
 
@@ -10,6 +11,6 @@ export default (req, res) => {
             return res.api.send(artist, res.api.codes.CREATED);
         })
         .catch(err => {
-            return res.api.send(err.message, res.api.codes.INTERNAL_SERVER_ERROR);
+            return res.api.send(err, res.api.codes.INTERNAL_SERVER_ERROR);
         })
-}
+};

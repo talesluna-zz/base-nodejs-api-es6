@@ -10,7 +10,7 @@ export default class Routers {
      * Synchronize routes for express app
      * @param app
      */
-    syncRouters(app) {
+    syncRouters(app, verbose = true) {
 
         // Regex for detect hidden paths and files in unix and unix-like systems
         const unixHidden = new RegExp(/^\..*/);
@@ -22,8 +22,14 @@ export default class Routers {
                 const moduleIndex = path.join(__dirname, `../api/${module}/_index.js`);
 
                 // Load module if path is not hidden and index file exists
-                if (!unixHidden.test(module.toString()) && fs.existsSync(moduleIndex))
+                if (!unixHidden.test(module.toString()) && fs.existsSync(moduleIndex)) {
                     require(moduleIndex).default(app);
+
+                    if (verbose) {
+                        app.log(`> [OK] ${module.toUpperCase()}`)
+                    }
+
+                }
 
             });
 

@@ -83,4 +83,4 @@ class RequestQuery {
     }
 }
 
-export default RequestQuery
+export default RequestQuery;

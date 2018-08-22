@@ -1,6 +1,7 @@
 /* eslint-disable no-console,no-undef*/
 import express      from 'express';
 import bodyParser   from 'body-parser';
+import cookieParser from 'cookie-parser'
 import compression  from 'compression';
 import morgan       from 'morgan';
 
@@ -12,26 +13,42 @@ const config        = new ApiConfig();
 const environment   = config.getEnv();
 
 // Core
-import Cors         from './core/Cors';
+import Headers      from './core/Headers';
 import Routers      from './core/Routers';
 import Database     from './core/Database';
 import RequestQuery from './core/RequestQuery';
 import SSL          from './core/SSL';
 import Security     from './core/Security';
 import Response     from './core/Response';
+import Locales      from './core/Locales';
+import Validator    from './core/Validator';
+
 
 // Classes & app
 const app           = express();
-const cors          = new Cors();
+const headers       = new Headers();
 const routers       = new Routers();
 const database      = new Database();
 const requestQuery  = new RequestQuery();
 const ssl           = new SSL();
 const security      = new Security();
 const response      = new Response();
+const locales       = new Locales(environment.app.locale);
+const validator     = new Validator();
 
 // Set express app in Response class
 response.setApp(app);
+
+
+/**
+ * Setup validator with Joi
+ * @private
+ */
+const _setupValidator = () => {
+    // Set locale in validator
+    validator.setLocale(locales.locale, locales.getLocaleObject('joi'));
+    validator.syncSettings();
+};
 
 /**
  * Use routes in app
@@ -42,23 +59,31 @@ const _setupRouters = () => {
 };
 
 /**
- * Console log output
+ * App console output
  * @param text
  * @private
  */
-const _appLog = (text) => {
-    if (config.getEnvName() !== 'test') {
-        console.log(text)
-    }
+const _setupAppLog = () => {
+
+    // Detect if testing is running
+    const isTest = config.getEnvName() === 'test';
+
+    // Define app log function
+    app.log = isTest ? (text) => text : console.info;
 };
 
 /**
  * Set the HTTP headers for cors and others
  * @private
  */
-const _setupCors = () => {
-    environment.server.cors['x-powered-by'] = environment.app.name;
-    cors.setCors(app, environment.server.cors)
+const _setupHeaders = () => {
+    headers.setHeaders(
+        app,
+        Object.assign(
+            environment.server.headers.cors,
+            environment.server.headers.others
+        )
+    )
 };
 
 /**
@@ -67,11 +92,11 @@ const _setupCors = () => {
  */
 const _setupDatabase = () => {
 
-    // Define cors headers
-    _setupCors();
-
     // Connect to databases
     if (Object.keys(environment.databases).length) {
+
+        // Define languages
+        database.setMongooseLocale(locales.getLocaleObject('mongoose'));
 
         database
             .connectDatabases(
@@ -82,12 +107,12 @@ const _setupDatabase = () => {
                 return _setupRouters();
             })
             .catch(err => {
-                throw err
+                console.error(err);
+                process.exit(1);
             });
 
     } else {
-        _appLog('[!]\t No database to connect.');
-        _setupRouters();
+        _setupRouters(environment.app.verbose);
     }
 };
 
@@ -96,13 +121,31 @@ const _setupDatabase = () => {
  * @private
  */
 const _listenSuccess = () => {
+
+    // Setup console logging function
+    _setupAppLog()
+
+    // Init databases
     _setupDatabase();
-    _appLog(`\n${environment.app.name} on at ${environment.server.host}:${environment.server.port}\n`);
-    if (ssl.cert && environment.server.secure) {
-        _appLog('[SSL_ON]\tSecure')
-    } else {
-        _appLog('[SSL_OFF]\tNOT SECURE (!)')
-    }
+
+    // Define cors headers
+    _setupHeaders();
+
+    // Define validator configs
+    _setupValidator();
+
+    // Print in console app status
+    app.log(`
+////////////////////////////////////
+------------------------------------
+${environment.app.name} (${environment.app.version})
+------------------------------------
+HOST: ${environment.server.host}
+PORT: ${environment.server.port}
+SSL: ${environment.server.ssl.enable ? 'YES (secure)' : 'NO'}
+------------------------------------
+    `);
+
 };
 
 // No use logs in test environment!
@@ -110,16 +153,17 @@ if (config.getEnvName() !== 'test') {
     app.use(morgan(config.getEnvName() === 'development'? 'dev' : 'combined'));
 }
 
-// Express global usages and middleware
+// Express global usages and middlewares
 app.use(bodyParser.json());
 app.use(requestQuery.parseQuery);
-app.use(compression({threshold : 100}));
+app.use(compression(environment.server.compression));
+app.use(cookieParser());
 
-// Security middleware with helmet
+// Security middlewares with helmet
 security.makeSecure(app, environment.server.ssl.hpkpKeys);
 
 // Create secure server or insecure server (see your *.env.js)
-const server = environment.server.secure ? ssl.getHTTPSServer(app, environment.server.ssl) : app;
+const server = environment.server.ssl.enable ? ssl.getHTTPSServer(app, environment.server.ssl) : app;
 
 // Listen server
 server.listen(environment.server.port, environment.server.host, _listenSuccess);

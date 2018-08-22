@@ -1,10 +1,15 @@
-/* eslint-disable multiline-ternary,no-console,no-process-exit,capitalized-comments */
+/* eslint-disable no-console,multiline-ternary */
+import {
+    defaultMongooseOptions,
+    defaultSchemaOptions
+}                       from '../config/mongoose/mongoose.conf';
 import mongoose         from 'mongoose';
 import Sequelize        from 'sequelize';
-import SequelizeConf    from '../config/sequelize.conf';
+import SequelizeConf    from '../config/sequelize/sequelize.conf';
 import fs               from 'fs'
 import path             from 'path';
 import paginate         from './Paginate';
+import beautifyUnique   from 'mongoose-beautiful-unique-validation';
 
 /**
  * Use this class for all methods that manage databases connections, MySQL, PGSql, MongoDB etc..
@@ -14,11 +19,16 @@ export default class Database {
     /**
      * Run baby
      */
-    constructor () {
+    constructor() {
         this.DEFAULTS = {
             CHARSET: 'utf8',
             DIALECT: 'mysql',
             LOGGING: null
+        }
+
+        this.CONNECT_METHODS = {
+            MONGOOSE: 'connectMongo',
+            SEQUELIZE: 'connectSQL'
         }
     }
 
@@ -29,36 +39,29 @@ export default class Database {
      * @param logging
      */
     connectDatabases(databases, logging = false) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             Object.keys(databases).forEach(database => {
 
-                switch (databases[database].configWith) {
+                // Define connect method by db type
+                const connectMethod = this.CONNECT_METHODS[databases[database].configWith.toUpperCase()];
 
-                    // Configure this DB with sequelize
-                    case 'sequelize':
-
-                        this.connectSQL(databases[database], () => {
-                            console.log(logging ? `Connection Success [${database.toUpperCase()}]` : '');
-                        });
-                        break;
-
-                    // Configure this database with mongoose
-                    case 'mongoose':
-
-                        this.connectMongo(databases[database], () => {
-                            console.log(logging ? `Connection Success [${database.toUpperCase()}]` : '');
-                        });
-                        break;
-
-                    default:
-                        throw Error('unknown database configuration agent.');
+                // Configured db type is not implemented, is unknown
+                if (!connectMethod) {
+                    reject(Error('unknown database configuration agent.'));
                 }
+
+                // Run connect method
+                this[connectMethod](databases[database], () => {
+                    console.info(logging ? `Connection Success [${database.toUpperCase()}]` : '');
+                })
+
             });
             setTimeout(resolve, 2000)
         });
     }
 
     /**
+     * Connect and sync mongodb schemas with mongoose
      *
      * @param databaseConfig
      * @returns {Connection}
@@ -66,17 +69,53 @@ export default class Database {
      */
     _connectInMongoDB(databaseConfig) {
 
+        // Define if mongoose should show  or hide logs
+        mongoose.set('debug', databaseConfig.logging);
+
         // Use promises
         mongoose.Promise = global.Promise;
 
         // Inject paginate function in mongoose
         mongoose.Model.paginate = paginate.mongoose;
 
+        // Get config database dialect or use default
+        const dialect = databaseConfig.dialect ? databaseConfig.dialect : 'mongodb';
+
+        // Use plugin Beautify Unique in mongoose (for parse mongodb unique errors)
+        mongoose.plugin(beautifyUnique);
+
+        // Set mongoose default options
+        Object.keys(defaultMongooseOptions)
+            .forEach(key => {
+                mongoose.set(key, defaultMongooseOptions[key]);
+            });
+
+        // Synchronize models in dir to mongoose
+        fs.readdirSync(path.join(__dirname, '../models', dialect))
+            .forEach(filename => {
+
+                // Define path for model script
+                const schema = require(path.join(__dirname, '../models/', dialect, filename)).default;
+
+                // Merge default options with custom options
+                const options = Object.assign(defaultSchemaOptions, schema.options);
+
+                // Set schema configs
+                Object.keys(options).forEach(key => {
+                    schema.set(key, options[key]);
+                });
+
+                // Import modal to mongoose
+                mongoose.model(schema.options.collection, schema);
+
+            });
+
         // Return mongo connection
-        return mongoose.connection.openUri(this._createMongooseUri('mongodb', databaseConfig));
+        return mongoose.connect(this._createMongooseUri('mongodb', databaseConfig));
     }
 
     /**
+     * Connect and sync SQL schemas with sequelize
      *
      * @param databaseConfig
      * @returns {Promise}
@@ -88,7 +127,7 @@ export default class Database {
         const dialect = databaseConfig.dialect ? databaseConfig.dialect : this.DEFAULTS.DIALECT;
 
         // Get config logging or no use logs
-        const logging = databaseConfig.logging ? console.log: this.DEFAULTS.LOGGING;
+        const logging = databaseConfig.logging ? console.log : this.DEFAULTS.LOGGING;
 
         // Get config database charset or use default
         const charset = databaseConfig.charset ? databaseConfig.charset : this.DEFAULTS.CHARSET;
@@ -96,7 +135,7 @@ export default class Database {
         // Create dialect object
         SequelizeConf[dialect] = {
             sequelize: null,
-            DB: []
+            DB       : []
         };
 
         // Inject paginate in sequelize Model
@@ -107,8 +146,8 @@ export default class Database {
             this._createSequelizeUri(dialect, databaseConfig),
             {
                 operatorsAliases: Sequelize.Op.Aliases,
-                charset: charset,
-                logging: logging
+                charset         : charset,
+                logging         : logging
             }
         );
 
@@ -140,9 +179,9 @@ export default class Database {
         // Sync models to database
         return SequelizeConf[dialect].sequelize.sync(
             {
-                // process.env.NODE_ENV !== 'production'
-                force: false,
-                logging: false
+                force   : databaseConfig.force,
+                alter   : databaseConfig.alter,
+                logging : logging
             }
         );
     }
@@ -155,7 +194,7 @@ export default class Database {
      * @private
      */
     _createSequelizeUri(driver, config) {
-        return  config.user.length
+        return config.user.length
             ? `${driver}://${config.user}:${config.pass}@${config.host}:${config.port}/${config.name}`
             : `${driver}://${config.host}:${config.port}/${config.name}`;
     }
@@ -169,25 +208,21 @@ export default class Database {
     _createMongooseUri(driver, config) {
 
         // Build URI options query
-        const authSource = config.authSource ? '&authSource=' + config.authSource : '';
-        const replicaSet = config.replicaSet ? '&replicaSet=' + config.replicaSet : '';
-        const options = `ssl=${config.ssl}${authSource}${replicaSet}`;
+        const options   = `ssl=${config.ssl}&authSource=${config.authSource}`;
+        const querySrv  = config.srv ? '+srv' : '';
+        const portStr   = config.srv ? '' : `:${config.port}`;
 
-        let servers = '';
+        // Define escaped user and pass
+        const user = encodeURIComponent(config.user ? config.user : '');
+        const pass = encodeURIComponent(config.pass ? config.pass : '');
 
-        // Concat all servers in array
-        config.servers.forEach((server, key) => {
+        // Finish, return final URI string
+        return (
+            user
+            ? `${driver}${querySrv}://${user}:${pass}@${config.host}${portStr}/${config.name}?${options}`
+            : `${driver}${querySrv}://${config.host}${portStr}/${config.name}?${options}`
+        );
 
-            // Set a delimiter when the servers is not last
-            const delimiter = key === config.servers.length - 1 ? '' : ',';
-
-            servers += `${server.host}:${server.port}${delimiter}`;
-        });
-
-        // Finish, concat the servers string to final URI string
-        return config.user.length
-            ? `${driver}://${config.user}:${config.pass}@${servers}/${config.name}?${options}`
-            : `${driver}://${config.servers}/${config.name}?${options}`;
     }
 
     /**
@@ -202,8 +237,7 @@ export default class Database {
                     return success();
                 })
                 .catch(err => {
-                    console.log('[MongoDB Error] \n\n\t' + err.message + '\n\tEXIT\n');
-                    process.exit(0);
+                    console.error('[MongoDB Error] \n\n\t' + err.message + '\n\tEXIT\n');
                 });
     }
 
@@ -219,8 +253,15 @@ export default class Database {
                     return success();
                 })
                 .catch(err => {
-                    console.log('[SQL Error] \n\n\t' + err.message + '\n\tEXIT\n');
-                    process.exit(0);
+                    console.error('[SQL Error] \n\n\t' + err.message + '\n\tEXIT\n');
                 });
+    }
+
+    /**
+     * Define mongoose message by locale
+     * @param localeObject
+     */
+    setMongooseLocale(localeObject) {
+        mongoose.Error.messages = localeObject
     }
 }

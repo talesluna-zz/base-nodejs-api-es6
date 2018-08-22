@@ -7,7 +7,9 @@ module.exports = {
      */
     app: {
         name    : 'Base - TEST MODE',
-        version : '2.0.0'
+        version : '2.2.0',
+        locale  : 'pt_BR',
+        verbose : false
     },
 
 
@@ -16,15 +18,22 @@ module.exports = {
      * All configurations for expressJS HTTP Server should gop here
      */
     server: {
-        secure  : false,
         host    : '127.0.0.1',
         port    : 3000,
-        cors    : {
-            'Access-Control-Allow-Origin'   : '*',
-            'Access-Control-Allow-Methods'  : 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers'  : 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+        headers : {
+            cors: {
+                'Access-Control-Allow-Origin'   : '*',
+                'Access-Control-Allow-Methods'  : 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers'  : 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+            },
+            others: {
+                'X-Powered-By': 'Base for Express/NodeJS API,s'
+            }
         },
         ssl: {
+            // SSL Enabled
+            enable: false,
+
             // SSL Private Key path
             privateKey  : 'PATH/TO/YOU/CERT_KEY',
 
@@ -33,6 +42,9 @@ module.exports = {
 
             // Key HPKP
             hpkpKeys    : []
+        },
+        compression: {
+            threshold   : 100
         }
     },
 
@@ -43,51 +55,52 @@ module.exports = {
      */
     databases: {
 
+        // Support: Standalone server, MongoDB Atlas, mLab
+
         // Example for mongo databases
         // Support for cluster
-        exampleMongo: {
-            servers: [
-                {
-                    host: 'localhost',
-                    port: 27017
-                },
-                // ...
-            ],
-            replicaSet  : '',
-            authSource  : 'admin',
-            ssl         : false,
-            user        : 'admin',
-            pass        : 'admin',
-            name        : 'example',
+        mongodb: {
+            host        : 'host',
+            port        : 27017,
+            user        : 'user',
+            pass        : 'pass',
+            name        : 'name',
+            authSource  : 'source',
             dialect     : 'mongodb',
             charset     : 'utf8',
+            srv         : false,
+            ssl         : false,
             logging     : true,
-            enabled     : true,
+            enabled     : false,
             configWith  : 'mongoose'
         },
 
         // Example for SQL databases
-        exampleMysql: {
-            host        : 'localhost',
-            port        : 3306,
-            user        : 'admin',
-            pass        : 'admin',
-            name        : 'example',
+        mysql: {
+            host        : 'host',
+            port        : 3307,
+            user        : 'user',
+            pass        : 'pass',
+            name        : 'name',
             dialect     : 'mysql',
             charset     : 'utf8',
             logging     : true,
+            force       : false,
+            alter       : false,
             enabled     : false,
             configWith  : 'sequelize'
         },
-        examplePostgre  : {
-            host        : 'localhost',
+        postgre: {
+            host        : 'host',
             port        : 5432,
-            user        : 'admin',
-            pass        : 'admin',
-            name        : 'example',
+            user        : 'user',
+            pass        : 'pass',
+            name        : 'name',
             dialect     : 'postgres',
             charset     : 'utf8',
             logging     : true,
+            force       : false,
+            alter       : false,
             enabled     : false,
             configWith  : 'sequelize'
         }
