@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 
 export default class Locales {
 
@@ -19,8 +20,12 @@ export default class Locales {
         // Use custom locale or default locale
         const locale = customLocale ? customLocale : this.locale;
 
-        // Require locale module
-        return require(path.join(this.localesPath, applyTo, locale))[locale]
+        // Define locale module path
+        const localePath = path.join(this.localesPath, applyTo, locale + '.js');
+
+        // Return locale module if exist or empty object
+        return fs.existsSync(localePath) ? require(localePath)[locale] : {}
+
     }
 
 }

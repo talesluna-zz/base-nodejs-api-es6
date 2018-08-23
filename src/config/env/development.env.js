@@ -35,10 +35,10 @@ module.exports = {
             enable: false,
 
             // SSL Private Key path
-            privateKey  : 'PATH/TO/YOU/CERT_KEY',
+            privateKey  : `${__dirname}/../../storage/certificates/ssl.key`,
 
             // SSL Certificate path
-            certificate : 'PATH/TO/YOU/CERT',
+            certificate : `${__dirname}/../../storage/certificates/ssl.crt`,
 
             // Key HPKP
             hpkpKeys    : []

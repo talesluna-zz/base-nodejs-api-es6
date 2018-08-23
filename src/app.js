@@ -136,15 +136,17 @@ const _listenSuccess = () => {
 
     // Print in console app status
     app.log(`
-////////////////////////////////////
+    
+ ${environment.app.name} (${environment.app.version})
 ------------------------------------
-${environment.app.name} (${environment.app.version})
-------------------------------------
-HOST: ${environment.server.host}
-PORT: ${environment.server.port}
-SSL: ${environment.server.ssl.enable ? 'YES (secure)' : 'NO'}
-------------------------------------
-    `);
+ HOST => ${environment.server.host}
+ PORT => ${environment.server.port}
+ SSL  => ${environment.server.ssl.enable ? 'YES (secure)' : 'NO'}
+
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+._._._._._._._._._._._._._._._._._._.
+
+`);
 
 };
 
