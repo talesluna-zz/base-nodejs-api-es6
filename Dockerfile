@@ -1,4 +1,4 @@
-FROM node:stretch
+FROM node:alpine
 
 # Create app directory
 RUN mkdir -p /opt/services/api_name
@@ -9,5 +9,5 @@ RUN mkdir -p storage/logs/app
 RUN chmod 777 storage/logs/app
 
 # Start service
-EXPOSE 3001
+EXPOSE 3000
 CMD [ "sh" ]

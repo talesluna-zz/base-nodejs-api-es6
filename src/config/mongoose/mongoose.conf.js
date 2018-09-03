@@ -1,9 +1,8 @@
-module.exports = {
-    defaultMongooseOptions: {
-        autoReconnect: true
-    },
-    defaultSchemaOptions: {
-        timestamps       : true,
-        runSettersOnQuery: true
-    }
+export const defaultMongooseOptions = {
+    autoReconnect: true
 };
+
+export const defaultSchemaOptions = {
+    timestamps       : true,
+    runSettersOnQuery: true
+}

@@ -6,5 +6,6 @@ package-lock.json
 dist
 releases
 node_modules/
-storage/logs
+statics/logs/*.log
+statics/logs/*.log.*
 src/config/env/*.env.js
