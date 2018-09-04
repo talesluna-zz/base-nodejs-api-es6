@@ -56,7 +56,7 @@ export default class Routes {
          * Resource not exists
          */
         app.use('*', (req, res) => {
-            return res.api.send(null, res.api.codes.OK, null, 'unknown_resource');
+            return res.api.send(null, res.api.codes.BAD_REQUEST, null, 'unknown_resource');
         });
 
 

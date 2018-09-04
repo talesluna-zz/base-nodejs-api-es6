@@ -72,17 +72,19 @@ export default class Http extends Ssl {
      * @param {*} config - server configuration {host: string, port: number, ssl: {...}}
      */
     _printBanner() {
-        logger.info(`
-            \r------------------------------------
-            \r${process.env.app.name} \t(v${process.env.app.version})
-            \r------------------------------------
-            \rHOST => ${this.config.host}
-            \rPORT => ${this.config.port}
-            \rSSL  => ${this.config.ssl.enable ? 'YES (secure)' : 'NO'}
-            \rENV  => ${process.env.envname}
-
-            \r.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
-            \r._._._._._._._._._._._._._._._._._._.
-        `);
+        if (process.env.app.verbose) {
+            logger.info(`
+                \r------------------------------------
+                \r${process.env.app.name} \t(v${process.env.app.version})
+                \r------------------------------------
+                \rHOST => ${this.config.host}
+                \rPORT => ${this.config.port}
+                \rSSL  => ${this.config.ssl.enable ? 'YES (secure)' : 'NO'}
+                \rENV  => ${process.env.envname}
+    
+                \r.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+                \r._._._._._._._._._._._._._._._._._._.
+            `);
+        }
     }
 }

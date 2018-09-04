@@ -1,7 +1,7 @@
 import assert       from 'assert';
 import chai         from 'chai';
 import chaiHttp     from 'chai-http';
-import app          from '../../src/app';
+import {app}        from '../../src/app';
 
 chai.use(chaiHttp);
 const server = chai.request(app);

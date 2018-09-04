@@ -9,7 +9,7 @@ export const env = {
         name    : 'My REST API',
         version : '2.2.0',
         locale  : 'pt_BR',
-        verbose : true
+        verbose : false
     },
 
 
@@ -19,7 +19,7 @@ export const env = {
      */
     server: {
         host    : '127.0.0.1',
-        port    : 3000,
+        port    : 3001,
         headers : {
             cors: {
                 'Access-Control-Allow-Origin'   : '*',
@@ -32,7 +32,7 @@ export const env = {
         },
         ssl: {
             // SSL Enabled
-            enable: true,
+            enable: false,
 
             // SSL Private Key path
             privateKey  : `${__dirname}/../../statics/ssl/ssl.key`,
