@@ -9,7 +9,7 @@ export const env: AppEnvironment = {
      */
     app: {
         name    : 'My REST API',
-        version : '2.2.0',
+        version : '1.0.0',
         locale  : 'pt_BR',
         verbose : true
     },
@@ -29,7 +29,7 @@ export const env: AppEnvironment = {
                 'Access-Control-Allow-Headers'  : 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
             },
             others: {
-                'X-Powered-By': 'My REST API v2.2.0'
+                'X-Powered-By': 'My REST API v1.0.0'
             }
         },
         ssl: {
