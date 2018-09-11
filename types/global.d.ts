@@ -1,0 +1,1 @@
+type PaginateFunction = (options: number, limit: number, page: number) => Promise<any>;

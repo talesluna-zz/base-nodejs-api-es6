@@ -1,0 +1,5 @@
+--timeout 10000
+--recursive
+--exit
+--require tests/register.js
+tests/**/*.test.ts
