@@ -97,7 +97,6 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 │   │   └── test.env.js
 │   └── middlewares.js
 ├── docker-compose.yml
-├── package-lock.json
 ├── package.json
 ├── pm2.yml
 ├── src
@@ -175,8 +174,7 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 │   │   └── mongoose
 │   │       └── pt_BR.json
 │   ├── logs
-│   │   ├── access.log
-│   │   └── errors.log
+│   │   └── ... files .log here ...
 │   └── ssl
 │       ├── ssl.crt
 │       └── ssl.key
