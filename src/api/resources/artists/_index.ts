@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
 // Joi Validators
-import createValidators from './_validators/create.validate';
-import updateValidators from './_validators/update.validate';
+import createValidators from './_validators/create.validator';
+import updateValidators from './_validators/update.validator';
 
 // Artist Middleware
 import create   from './create';

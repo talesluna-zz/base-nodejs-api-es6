@@ -25,80 +25,6 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 ## Structure
 ```
 .
-├── Dockerfile
-├── LICENSE
-├── README.md
-├── dist
-│   ├── api
-│   │   ├── models
-│   │   │   ├── DB_Artist
-│   │   │   │   └── artists.js
-│   │   │   ├── DB_Log
-│   │   │   │   └── logs.js
-│   │   │   ├── DB_Music
-│   │   │   │   └── musics.js
-│   │   │   └── DB_Music2
-│   │   │       ├── artists.js
-│   │   │       └── musics.js
-│   │   ├── resources
-│   │   │   ├── artists
-│   │   │   │   ├── _index.js
-│   │   │   │   ├── _validators
-│   │   │   │   │   ├── create.validate.js
-│   │   │   │   │   └── update.validate.js
-│   │   │   │   ├── create.js
-│   │   │   │   ├── read.js
-│   │   │   │   ├── readOne.js
-│   │   │   │   └── update.js
-│   │   │   └── musics
-│   │   │       ├── _index.js
-│   │   │       ├── _validators
-│   │   │       │   ├── create.validator.js
-│   │   │       │   └── update.validator.js
-│   │   │       ├── create.js
-│   │   │       ├── read.js
-│   │   │       ├── readOne.js
-│   │   │       └── update.js
-│   │   └── services
-│   │       ├── Example.service.js
-│   │       └── Service.js
-│   ├── app.js
-│   ├── config
-│   │   ├── joi
-│   │   │   └── joi.conf.js
-│   │   ├── models.conf.js
-│   │   └── mongoose
-│   │       └── mongoose.conf.js
-│   ├── core
-│   │   ├── Core.js
-│   │   ├── common
-│   │   │   ├── Environment.js
-│   │   │   ├── Headers.js
-│   │   │   ├── Locale.js
-│   │   │   ├── Logs.js
-│   │   │   ├── Response.js
-│   │   │   ├── Routes.js
-│   │   │   ├── Security.js
-│   │   │   └── Validator.js
-│   │   ├── database
-│   │   │   ├── Database.js
-│   │   │   ├── Mongo.js
-│   │   │   ├── Paginate.js
-│   │   │   └── SQL.js
-│   │   ├── http
-│   │   │   ├── Http.js
-│   │   │   └── Ssl.js
-│   │   └── middlewares
-│   │       ├── Middlewares.js
-│   │       └── RequestQuery.js
-│   ├── environment
-│   │   ├── development.env.js
-│   │   ├── production.env.js
-│   │   └── test.env.js
-│   └── middlewares.js
-├── docker-compose.yml
-├── package.json
-├── pm2.yml
 ├── src
 │   ├── api
 │   │   ├── models
@@ -113,19 +39,19 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 │   │   │       └── musics.ts
 │   │   ├── resources
 │   │   │   ├── artists
-│   │   │   │   ├── _index.ts
 │   │   │   │   ├── _validators
-│   │   │   │   │   ├── create.validate.ts
-│   │   │   │   │   └── update.validate.ts
+│   │   │   │   │   ├── create.validator.ts
+│   │   │   │   │   └── update.validator.ts
+│   │   │   │   ├── _index.ts
 │   │   │   │   ├── create.ts
 │   │   │   │   ├── read.ts
 │   │   │   │   ├── readOne.ts
 │   │   │   │   └── update.ts
 │   │   │   └── musics
-│   │   │       ├── _index.ts
 │   │   │       ├── _validators
 │   │   │       │   ├── create.validator.ts
 │   │   │       │   └── update.validator.ts
+│   │   │       ├── _index.ts
 │   │   │       ├── create.ts
 │   │   │       ├── read.ts
 │   │   │       ├── readOne.ts
@@ -133,15 +59,13 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 │   │   └── services
 │   │       ├── Example.service.ts
 │   │       └── Service.ts
-│   ├── app.ts
 │   ├── config
 │   │   ├── joi
 │   │   │   └── joi.conf.ts
-│   │   ├── models.conf.ts
-│   │   └── mongoose
-│   │       └── mongoose.conf.ts
+│   │   ├── mongoose
+│   │   │   └── mongoose.conf.ts
+│   │   └── models.conf.ts
 │   ├── core
-│   │   ├── Core.ts
 │   │   ├── common
 │   │   │   ├── Environment.ts
 │   │   │   ├── Headers.ts
@@ -159,13 +83,15 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 │   │   ├── http
 │   │   │   ├── Http.ts
 │   │   │   └── Ssl.ts
-│   │   └── middlewares
-│   │       ├── Middlewares.ts
-│   │       └── RequestQuery.ts
+│   │   ├── middlewares
+│   │   │   ├── Middlewares.ts
+│   │   │   └── RequestQuery.ts
+│   │   └── Core.ts
 │   ├── environment
 │   │   ├── development.env.ts
 │   │   ├── production.env.ts
 │   │   └── test.env.ts
+│   ├── app.ts
 │   └── middlewares.ts
 ├── statics
 │   ├── locales
@@ -174,7 +100,7 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 │   │   └── mongoose
 │   │       └── pt_BR.json
 │   ├── logs
-│   │   └── ... files .log here ...
+│   |   └── ... default path to save logs ...
 │   └── ssl
 │       ├── ssl.crt
 │       └── ssl.key
@@ -183,12 +109,18 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 │   │   └── example.test.ts
 │   ├── mocha.opts
 │   └── register.js
+├── types
+│   └── ... custom types in directories ...
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── docker-compose.yml
+├── package-lock.json
+├── package.json
+├── pm2.yml
 ├── tsconfig.json
-├── tslint.json
-└── types
-    └── ... custom types here ....
-
-  ```
+└── tslint.json
+```
   
   ## Install
   ```sh
@@ -207,14 +139,14 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
   npm run build
   
   # Run (local)
-  npm run dev   # (Development mode)
-  npm run test  # (Run tests)
-  npm start     # (Production mode with pm2, build before)
-  npm stop      # (Stop Production)
-  npm restart   # (Restart the api)
+  npm run dev   # (Start api in development mode)
+  npm run test  # (Run tests with mocha)
+  npm start     # (Start api in production mode with pm2, build before)
+  npm stop      # (Stop production)
+  npm restart   # (Restart production)
 
   # Deploy (Docker)
-  npm run start-docker  # (Pull image and deploy docker container)
+  npm run start-docker  # (Pull and deploy docker container)
   npm run stop-docker   # (Stop deployed container)
   docker-compose        # (Others deployment options)
 
