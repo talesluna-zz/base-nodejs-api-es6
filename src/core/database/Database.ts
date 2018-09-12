@@ -8,9 +8,9 @@ import { logger } from '../common/Logs';
  */
 export default class Database {
 
-    private mongo: Mongo;
-    private sql: SQL;
-    private CONNECT_METHODS: {[prop: string]: Mongo | SQL}
+    private mongo           : Mongo;
+    private sql             : SQL;
+    private CONNECT_METHODS : {[prop: string]: Mongo | SQL};
 
     /**
      * Run baby
@@ -31,7 +31,7 @@ export default class Database {
         this.CONNECT_METHODS = {
             MONGOOSE    : this.mongo,
             SEQUELIZE   : this.sql
-        }
+        };
 
     }
 
@@ -45,37 +45,36 @@ export default class Database {
      */
     public connectDatabases(logging = false): Promise<any> {
 
-        const {databases}: any = process.env;
+        const { databases }: any = process.env;
 
         return new Promise((resolve, reject) => {
 
             Object
-                .keys(databases)
-                .forEach(database => {
+            .keys(databases)
+            .forEach((database: string) => {
 
 
-                    // Define connect method by db type
-                    const connectMethod = this.CONNECT_METHODS[databases[database].configWith.toUpperCase()];
+                // Define connect method by db type
+                const connectMethod = this.CONNECT_METHODS[databases[database].configWith.toUpperCase()];
 
-                    // Define database name
-                    databases[database].dbname = database;
+                // Define database name
+                databases[database].dbname = database;
 
-                    // Configured db type is not implemented, is unknown
-                    if (!connectMethod) {
-                        reject(Error('Unknown database configuration agent.'));
-                    }
-
-
-                    // Run connect method
-                    connectMethod.connect(
-                        databases[database],
-                        () => logger.debug(logging ? `[DATABASE] Connection success in ${databases[database].dialect} (${database})` : '')
-                    )
-
+                // Configured db type is not implemented, is unknown
+                if (!connectMethod) {
+                    reject(Error('Unknown database configuration agent.'));
                 }
-            );
 
-            setTimeout(resolve, 2000)
+
+                // Run connect method
+                connectMethod.connect(
+                    databases[database],
+                    () => logger.debug(logging ? `[DATABASE] Connection success in ${databases[database].dialect} (${database})` : '')
+                );
+
+            });
+
+            setTimeout(resolve, 2000);
 
         });
     }
@@ -86,7 +85,7 @@ export default class Database {
      *
      * @param {*} locale
      */
-    public defineLocales(locale = {mongo: null}) {
+    public defineLocales(locale = { mongo: null }) {
         if (locale) {
             this.mongo.setLocale(locale.mongo);
         }

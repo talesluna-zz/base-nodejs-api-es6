@@ -12,4 +12,4 @@ export const defaultSettings: JoiDefaultSettings[] = [
             abortEarly: false
         }
     }
-]
+];

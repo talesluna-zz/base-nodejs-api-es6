@@ -1,7 +1,7 @@
-import path     from 'path';
-import fs       from 'fs'
-import {logger} from './Logs';
 import { Application, Request, Response } from 'express';
+import { logger }   from './Logs';
+import path         from 'path';
+import fs           from 'fs';
 
 
 /**
@@ -29,29 +29,31 @@ export default class Routes {
         const unixHidden = new RegExp(/^\..*/);
 
         fs.readdirSync(this.resourcesPath)
-            .forEach((module) => {
+        .forEach(module => {
 
-                try {
+            try {
 
-                    // Module index file, should exists to import
-                    const moduleIndex = path.join(this.resourcesPath, `/${module}/_index`);
+                // Module index file, should exists to import
+                const moduleIndex = path.join(this.resourcesPath, `/${module}/_index`);
 
-                    // Load module if path is not hidden and index file exists
-                    if (!unixHidden.test(module.toString()) && (fs.existsSync(moduleIndex + '.js')) || fs.existsSync(moduleIndex + '.ts')) {
-                        require(moduleIndex).default(app);
+                // Load module if path is not hidden and index file exists
+                if (
+                    !unixHidden.test(module.toString()) &&
+                    (fs.existsSync(`${moduleIndex}.ts`) || fs.existsSync(`${moduleIndex}.js`))
+                ) {
+                    require(moduleIndex).default(app);
 
-                        if (verbose) {
-                            logger.debug(`[ROUTES] Loaded '${module}' resource`)
-                        }
-
+                    if (verbose) {
+                        logger.debug(`[ROUTES] Loaded '${module}' resource`);
                     }
 
-                } catch (err) {
-                    throw err;
                 }
 
+            } catch (err) {
+                throw err;
             }
-        );
+
+        });
 
 
         /**

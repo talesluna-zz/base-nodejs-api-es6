@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import {dbs} from '../../../config/models.conf';
+import { dbs } from '../../../config/models.conf';
 
 
 export default (req: Request, res: Response) => {
 
-    const {Artists} = dbs.DB_Artist.models;
+    const { Artists } = dbs.DB_Artist.models;
 
     /**
      * Find all registers of Artist collection
@@ -25,5 +25,5 @@ export default (req: Request, res: Response) => {
         })
         .catch((err: Error) => {
             return res.api.send(err, res.api.codes.INTERNAL_SERVER_ERROR);
-        })
+        });
 };

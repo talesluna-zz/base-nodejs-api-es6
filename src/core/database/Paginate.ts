@@ -1,11 +1,9 @@
-import { Schema, Aggregate, Query } from "mongoose";
-
 export interface PaginateObject {
-    page    : number,
-    total   : number,
-    offset  : number,
-    perPage : number,
-    lastPage: number
+    page    : number;
+    total   : number;
+    offset  : number;
+    perPage : number;
+    lastPage: number;
 }
 
 /**
@@ -25,12 +23,12 @@ export default class Paginate {
      */
     static getPaginateObject(limit: number, page: number, total: number): PaginateObject {
         return {
-            offset  : limit * (page - 1),
-            page    : page,
+            total,
+            page,
             perPage : page === 1 && total < limit ? total : limit,
             lastPage: Math.ceil(total / limit),
-            total   : total
-        }
+            offset  : limit * (page - 1),
+        };
     }
 
     /**
@@ -46,7 +44,7 @@ export default class Paginate {
         return {
             data    : dataResult,
             paginate: paginateObject
-        }
+        };
     }
 
 
@@ -62,12 +60,12 @@ export default class Paginate {
      */
     protected sequelizePaginate(options: any, limit: number, page: number) {
 
-        const _self: any = this;
+        const self: any = this;
 
         // Initialize paginate object
         let paginateObject: PaginateObject;
 
-        return _self.count()
+        return self.count()
             .then((total: number) => {
 
                 // Set paginate object
@@ -78,25 +76,25 @@ export default class Paginate {
                 options.offset  = paginateObject.offset;
 
                 // Find registers with options
-                return _self.findAll(options)
+                return self.findAll(options);
 
             })
             .then((dataResult: any) => {
 
                 // Return registers and paginate
-                return Paginate.getPaginateResultObject(paginateObject, dataResult)
+                return Paginate.getPaginateResultObject(paginateObject, dataResult);
 
             })
             .catch((err: Error) => {
                 // Reject promise returning errors
                 throw err;
-            })
+            });
     }
 
 
     /**
      * @description Return mongoose paginate method
-     * 
+     *
      * @param {*}       options
      * @param {number}  limit
      * @param {number}  page
@@ -105,33 +103,33 @@ export default class Paginate {
      */
     protected mongoosePaginate(options: number, limit: number, page: number) {
 
-        const _self: any = this;
+        const self: any = this;
 
         // Initialize paginate object
         let paginateObject: PaginateObject;
 
-        return _self.count()
+        return self.count()
             .then((total: number) => {
 
                 // Set paginate result
                 paginateObject = Paginate.getPaginateObject(limit, page, total);
 
                 // Find registers with options
-                return _self.aggregate(options)
+                return self.aggregate(options)
                     .skip(paginateObject.offset)
                     // Limit aways be positive
-                    .limit(paginateObject.perPage > 0 ? paginateObject.perPage : 1)
+                    .limit(paginateObject.perPage > 0 ? paginateObject.perPage : 1);
 
             })
             .then((dataResult: any) => {
 
                 // Return registers and paginate
-                return Paginate.getPaginateResultObject(paginateObject, dataResult)
+                return Paginate.getPaginateResultObject(paginateObject, dataResult);
 
             })
             .catch((err: Error) => {
                 // Reject promise returning errors
                 throw err;
-            })
+            });
     }
 }

@@ -1,8 +1,8 @@
 import 'joi-i18n';
 import Joi                  from 'joi';
 import path                 from 'path';
-import {merge}              from 'lodash'
-import {defaultSettings}    from '../../config/joi/joi.conf';
+import { merge }            from 'lodash';
+import { defaultSettings }  from '../../config/joi/joi.conf';
 
 
 /**
@@ -12,7 +12,7 @@ export default class Validator {
 
     private localesPath: string;
     private locale: string;
-    
+
 
     constructor () {
         this.locale = '';
@@ -28,7 +28,7 @@ export default class Validator {
      *
      */
     public setLocale(locale: string, localeObject: any) {
-        
+
         // Set locale
         this.locale = locale;
 
@@ -46,9 +46,7 @@ export default class Validator {
         // Apply settings in methods
         defaultSettings
         .filter(setting => setting.applyTo && setting.applyTo.length)
-        .forEach(setting => {
-            this._applySettingByMthods(setting.applyTo, setting.settings);
-        });
+        .forEach(setting => this.applySettingByMthods(setting.applyTo, setting.settings));
 
     }
 
@@ -60,14 +58,9 @@ export default class Validator {
      * @param {any} settings
      * @param {*} joiInstance = Joi
      */
-    private _applySettingByMthods(applyTo: string[], settings: any, joiInstance: any = Joi) {
-        applyTo
-            //.map((method: string) => joiInstance[method])
-            .forEach((method: string) => {
+    private applySettingByMthods(applyTo: string[], settings: any, joiInstance: any = Joi) {
 
-                // Add settings to Joi method (OH MY GOD!)
-                merge(joiInstance[method](), {_settings: settings});
+        applyTo.forEach((method: string) => merge(joiInstance[method](), { _settings: settings }));
 
-            })
     }
 }

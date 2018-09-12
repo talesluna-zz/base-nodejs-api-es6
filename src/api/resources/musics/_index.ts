@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
 // Joi Validators
-import createValidators from './_validators/create.validator';
-import updateValidators from './_validators/update.validator';
+import createValidator from './_validators/create.validator';
+import updateValidator from './_validators/update.validator';
 
 // Example Middleware
 import create   from './create';
@@ -14,13 +14,13 @@ export default (route: Router) => {
 
     // Route to create new music
     route.post('/musics', [
-        createValidators,
+        createValidator,
         create
     ]);
 
     // Route to update existent music
     route.put('/musics/:_id', [
-        updateValidators,
+        updateValidator,
         update
     ]);
 
@@ -29,4 +29,5 @@ export default (route: Router) => {
 
     // Route to read specific music
     route.get('/musics/:_id', readOne);
+
 };

@@ -16,4 +16,4 @@ core.bootstrap(middlewares);
 /**
  * Export app for tests
  */
-export const {app}: any = core;
+export const { app }: any = core;

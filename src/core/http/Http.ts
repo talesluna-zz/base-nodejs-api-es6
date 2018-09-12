@@ -1,10 +1,10 @@
-declare const process: {env: {[prop: string]: any}}
+declare const process: {env: {[prop: string]: any}};
 
-import https, { Server as HttpsServer }    from 'https';
-import http, {Server as HttpServer}         from 'http';
-import Ssl                                  from './SSL';
-import {logger}                             from '../common/Logs';
-import { Application }                      from 'express';
+import https, { Server as HttpsServer } from 'https';
+import http, { Server as HttpServer }   from 'http';
+import { Application }                  from 'express';
+import { logger }                       from '../common/Logs';
+import Ssl                              from './Ssl';
 
 
 /**
@@ -13,7 +13,7 @@ import { Application }                      from 'express';
 export default class Http extends Ssl {
 
     private config: any;
-    private instance: HttpServer | HttpsServer | null
+    private instance: HttpServer | HttpsServer | null;
 
     constructor() {
         super();
@@ -33,35 +33,32 @@ export default class Http extends Ssl {
      */
     public startServer(app: Application) {
         return new Promise((resolve, reject) => {
+
             try {
-
-                // Common server instance, express app
-
 
                 // If SSL has defined use HTTPS, if not use HTTP
                 if (this.config.ssl && this.config.ssl.enable) {
-                    this.instance =  https.createServer(this.getSSL(this.config.ssl), app)
+                    this.instance =  https.createServer(this.getSSL(this.config.ssl), app);
                 } else {
-                    this.instance = http.createServer(app)
+                    this.instance = http.createServer(app);
                 }
-
 
                 // Listen server to defined host at defined port
                 this.instance.listen(
                     this.config.port,
                     this.config.host,
                     () => {
-                        this._printBanner();
-                        resolve(true)
+                        this.printBanner();
+                        resolve(true);
                     }
-                )
+                );
 
 
             } catch (err) {
-                reject(err)
+                reject(err);
             }
 
-        })
+        });
     }
 
 
@@ -70,7 +67,7 @@ export default class Http extends Ssl {
      *
      * @param {*} config - server configuration {host: string, port: number, ssl: {...}}
      */
-    private _printBanner() {
+    private printBanner() {
         if (process.env.app.verbose) {
             logger.info(`
                 \r------------------------------------
@@ -80,7 +77,7 @@ export default class Http extends Ssl {
                 \rPORT => ${this.config.port}
                 \rSSL  => ${this.config.ssl.enable ? 'YES (secure)' : 'NO'}
                 \rENV  => ${process.env.envname}
-    
+
                 \r.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
                 \r._._._._._._._._._._._._._._._._._._.
             `);

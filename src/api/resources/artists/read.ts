@@ -3,8 +3,7 @@ import { dbs } from '../../../config/models.conf';
 
 export default (req: Request, res: Response) => {
 
-    
-const { Artists } = dbs.DB_Artist.models;
+    const { Artists } = dbs.DB_Artist.models;
 
     /**
      * Find all registers of Artist collection
@@ -28,7 +27,7 @@ const { Artists } = dbs.DB_Artist.models;
                 return res.api.send(null, res.api.codes.NOT_FOUND);
             }
 
-            return res.api.send(result.data, res.api.codes.OK, {paginate: result.paginate});
+            return res.api.send(result.data, res.api.codes.OK, { paginate: result.paginate });
 
         })
         .catch((err: Error) => {

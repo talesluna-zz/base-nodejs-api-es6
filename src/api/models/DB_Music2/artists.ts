@@ -1,15 +1,15 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-export default (sequelize: Sequelize, DataTypes: DataTypes) => {
-    const Artists = sequelize.define('Artists', {
+export default (sequelize: Sequelize, dataTypes: DataTypes) => {
+    const artists = sequelize.define('Artists', {
         id: {
-            type        : DataTypes.UUID,
+            type        : dataTypes.UUID,
             primaryKey  : true,
             allowNull   : true,
-            defaultValue: DataTypes.UUIDV4
+            defaultValue: dataTypes.UUIDV4
         },
         name: {
-            type        : DataTypes.STRING,
+            type        : dataTypes.STRING,
             unique      : true,
             allowNull   : false,
             validate    : {
@@ -17,15 +17,17 @@ export default (sequelize: Sequelize, DataTypes: DataTypes) => {
             }
         }
     }
-    ).schema('public');
+    )
+    .schema('public');
 
-    Artists.associate = (models) => {
-        Artists.hasMany(models.Musics, {
+    artists.associate = (models) => {
+        artists.hasMany(models.Musics, {
             onDelete: 'RESTRICT',
             foreignKeyConstraint: true,
             foreignKey: 'artistId'
         });
     };
 
-    return Artists;
+    return artists;
+
 };

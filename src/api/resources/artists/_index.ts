@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
 // Joi Validators
-import createValidators from './_validators/create.validator';
-import updateValidators from './_validators/update.validator';
+import createValidator from './_validators/create.validator';
+import updateValidator from './_validators/update.validator';
 
 // Artist Middleware
 import create   from './create';
@@ -14,13 +14,13 @@ export default (route: Router) => {
 
     // Route to create new artist
     route.post('/artists', [
-        createValidators,
+        createValidator,
         create
     ]);
 
     // Route to update existent artist
     route.put('/artists/:_id', [
-        updateValidators,
+        updateValidator,
         update
     ]);
 

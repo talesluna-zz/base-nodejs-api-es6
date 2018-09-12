@@ -23,7 +23,7 @@ export default class RequestQuery {
 
     /**
      * @description Middleware for parse items of req.query
-     * 
+     *
      * @param {*} req
      * @param {*} res
      * @param {VoidFunction} next
@@ -45,7 +45,7 @@ export default class RequestQuery {
 
             // Increment project object with select fields
             req.query.select.forEach((item: string) => {
-                req.query.project[item] = true
+                req.query.project[item] = true;
             });
         }
 
@@ -57,9 +57,9 @@ export default class RequestQuery {
             : {};
 
         // Detect ObjectID in where (for MongoDB)
-        Object.keys(req.query.where).forEach(item => {
+        Object.keys(req.query.where).forEach((item: string) => {
             if (mongoose.Types.ObjectId.isValid(req.query.where[item])) {
-                req.query.where[item] = mongoose.Types.ObjectId(req.query.where[item])
+                req.query.where[item] = mongoose.Types.ObjectId(req.query.where[item]);
             }
         });
 

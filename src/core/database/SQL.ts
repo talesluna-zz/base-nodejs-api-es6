@@ -1,8 +1,8 @@
-import fs               from 'fs';
-import path             from 'path';
-import Sequelize        from 'sequelize';
-import {dbs}            from '../../config/models.conf';
-import Paginate         from './Paginate';
+import fs           from 'fs';
+import path         from 'path';
+import Sequelize    from 'sequelize';
+import { dbs }      from '../../config/models.conf';
+import Paginate     from './Paginate';
 
 
 /**
@@ -23,7 +23,7 @@ export default class SQL extends Paginate {
             CHARSET: 'utf8',
             DIALECT: 'mysql',
             LOGGING: null
-        }
+        };
 
     }
 
@@ -36,15 +36,15 @@ export default class SQL extends Paginate {
      */
     public connect(database: any, success: VoidFunction, error: Function = process.exit) {
         if (database.enabled) {
-            this._connectInSQLDialect(database)
+            this.connectInSQLDialect(database)
                 .then(() => {
                     return success();
                 })
                 .catch((err: Error) => {
-                    console.error('[DATABASE] \n\n\t' + err.message + '\n\tEXIT\n');
+                    console.error(`[DATABASE] \n\n\t'${err.message}'\n\tEXIT\n`);
 
                     // Exit
-                    error(1)
+                    error(1);
                 });
         }
     }
@@ -56,7 +56,7 @@ export default class SQL extends Paginate {
      * @param {*} databaseConfig
      * @returns {Promise}
      */
-    private _connectInSQLDialect(database: any) {
+    private connectInSQLDialect(database: any) {
 
         // Get config database dialect or use default
         const dialect = database.dialect ? database.dialect : this.DEFAULTS.DIALECT;
@@ -65,7 +65,7 @@ export default class SQL extends Paginate {
         const logging = database.logging ? console.log : this.DEFAULTS.LOGGING;
 
         // Get config database charset or use default
-        //const charset = database.charset ? database.charset : this.DEFAULTS.CHARSET;
+        // const charset = database.charset ? database.charset : this.DEFAULTS.CHARSET;
 
         // Create dialect object
         dbs[database.dbname] = {
@@ -75,25 +75,30 @@ export default class SQL extends Paginate {
 
         // Inject paginate in sequelize Model
         Sequelize.Model.paginate = this.sequelizePaginate;
-        
+
         // Create sequelize instance
         dbs[database.dbname].sequelize = new Sequelize(
-            this._createSequelizeUri(dialect, database),
+            this.createSequelizeUri(dialect, database),
             {
-                operatorsAliases: this._getOpAliases(),
-                //charset         : charset,
-                logging         : logging
+                logging,
+                operatorsAliases: this.getOpAliases(),
+                // charset: charset,
             }
         );
-        
+
 
         // Synchronize models in dir to sequelize
-        fs.readdirSync(path.join(__dirname, '../../api/models/' + database.dbname))
-            .forEach(filename => {
+        fs.readdirSync(path.join(__dirname, `../../api/models/'${database.dbname}`))
+            .forEach((filename: string) => {
 
                 // Define path for model script
                 const modelPath = path.join(
-                    __dirname, '../../api/models/', database.dbname, filename.toString().split('.js')[0].toLowerCase()
+                    __dirname, '../../api/models/',
+                    database.dbname,
+                    filename
+                    .toString()
+                    .split('.js')[0]
+                    .toLowerCase()
                 );
 
                 // Create model with import
@@ -115,9 +120,9 @@ export default class SQL extends Paginate {
         // Sync models to database
         return dbs[database.dbname].sequelize.sync(
             {
-                force   : database.force,
-                alter   : database.alter,
-                logging : logging
+                logging,
+                force: database.force,
+                alter: database.alter,
             }
         );
     }
@@ -130,7 +135,7 @@ export default class SQL extends Paginate {
      * @param {*} config
      * @returns {string}
      */
-    private _createSequelizeUri(driver: string, config: any) {
+    private createSequelizeUri(driver: string, config: any) {
         return config.user.length
             ? `${driver}://${config.user}:${config.pass}@${config.host}:${config.port}/${config.name}`
             : `${driver}://${config.host}:${config.port}/${config.name}`;
@@ -139,10 +144,10 @@ export default class SQL extends Paginate {
 
     /**
      * @description Return operator aliases list in object
-     * 
+     *
      * @returns {*}
      */
-    private _getOpAliases(): {[prop: string]: symbol} {
+    private getOpAliases(): {[prop: string]: symbol} {
         return {
             $ne             : Sequelize.Op.ne,
             $eq             : Sequelize.Op.eq,
@@ -178,6 +183,6 @@ export default class SQL extends Paginate {
             $strictRight    : Sequelize.Op.strictRight,
             $noExtendLeft   : Sequelize.Op.noExtendLeft,
             $noExtendRight  : Sequelize.Op.noExtendRight,
-        };     
+        };
     }
 }

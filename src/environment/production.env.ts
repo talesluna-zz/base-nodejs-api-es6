@@ -66,7 +66,7 @@ export const env: AppEnvironment = {
 
         // Example for mongo databases
         // Support for cluster
-        'DB_Artist': {
+        DB_Artist: {
             host        : 'host',
             port        : 27017,
             user        : 'user',
@@ -83,7 +83,7 @@ export const env: AppEnvironment = {
         },
 
         // Example for SQL databases
-        'DB_Music': {
+        DB_Music: {
             host        : 'host',
             port        : 3306,
             user        : 'user',
@@ -98,7 +98,7 @@ export const env: AppEnvironment = {
             configWith  : 'sequelize'
         },
 
-        'DB_Music2': {
+        DB_Music2: {
             host        : 'host',
             port        : 5432,
             user        : 'user',

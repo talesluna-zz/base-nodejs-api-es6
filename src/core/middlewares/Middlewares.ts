@@ -1,4 +1,4 @@
-declare const process: {env: {[prop: string]: any}}
+declare const process: {env: {[prop: string]: any}};
 
 import bodyParser      from 'body-parser';
 import cookieParser    from 'cookie-parser';
@@ -28,14 +28,14 @@ export default class Middlewares extends RequestQuery {
             cookieParser(),
             bodyParser.json(),
             this.parseQuery
-        ]
+        ];
 
     }
 
 
     /**
      * @description Use default and all passed middlewares in express app
-     * 
+     *
      * @param {*} app - Express app
      * @param {*} customMiddlewares - Array with your custom middlewares to set in express
      */

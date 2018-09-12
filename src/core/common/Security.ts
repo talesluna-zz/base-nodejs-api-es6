@@ -1,6 +1,7 @@
-declare const process: {env: {[prop: string]: any}}
-import helmet from 'helmet';
-import { Application } from 'express';
+declare const process: {env: {[prop: string]: any}};
+
+import helmet           from 'helmet';
+import { Application }  from 'express';
 
 
 /**
@@ -51,6 +52,6 @@ export default class Security {
         // Block iframe usage (clickjacking)
         app.use(helmet.frameguard({
             action: 'same-origin'
-        }))
+        }));
     }
 }

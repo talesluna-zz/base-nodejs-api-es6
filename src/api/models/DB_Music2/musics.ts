@@ -1,15 +1,15 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-export default (sequelize: Sequelize, DataTypes: DataTypes) => {
-    const Musics = sequelize.define('Musics', {
+export default (sequelize: Sequelize, dataTypes: DataTypes) => {
+    const musics = sequelize.define('Musics', {
         id: {
-            type        : DataTypes.UUID,
+            type        : dataTypes.UUID,
             primaryKey  : true,
             allowNull   : true,
-            defaultValue: DataTypes.UUIDV4
+            defaultValue: dataTypes.UUIDV4
         },
         name: {
-            type        : DataTypes.STRING,
+            type        : dataTypes.STRING,
             unique      : true,
             allowNull   : false,
             validate    : {
@@ -17,30 +17,32 @@ export default (sequelize: Sequelize, DataTypes: DataTypes) => {
             }
         },
         duration: {
-            type        : DataTypes.INTEGER,
+            type        : dataTypes.INTEGER,
             allowNull   : true
         },
         albumName: {
-            type        : DataTypes.STRING,
+            type        : dataTypes.STRING,
             defaultValue: 'unknown'
         },
         artistId: {
-            type        : DataTypes.UUID,
+            type        : dataTypes.UUID,
             allowNull   : false,
             validate: {
                 required: true
             }
         }
     }
-    ).schema('public');
+    )
+    .schema('public');
 
-    Musics.associate = (models) => {
-      Musics.belongsTo(models.Artists, {
-          onDelete: 'RESTRICT',
-          foreignKeyConstraint: true,
-          foreignKey: 'artistId'
-      });
+    musics.associate = (models) => {
+        musics.belongsTo(models.Artists, {
+            onDelete: 'RESTRICT',
+            foreignKeyConstraint: true,
+            foreignKey: 'artistId'
+        });
     };
 
-    return Musics;
+    return musics;
+
 };

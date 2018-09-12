@@ -19,11 +19,11 @@ export default class Ssl {
         }
 
         return {
-            key                 : this._readSSLFiles(config.privateKey),
-            cert                : this._readSSLFiles(config.certificate),
+            key                 : this.readSSLFiles(config.privateKey),
+            cert                : this.readSSLFiles(config.certificate),
             requestCert         : true,
             rejectUnauthorized  : false
-        }
+        };
     }
 
     /**
@@ -32,13 +32,13 @@ export default class Ssl {
      * @returns {Buffer | string | (string | Buffer)}
      * @param {string} filePath
      */
-    private _readSSLFiles(filePath: string): Buffer | string {
+    private readSSLFiles(filePath: string): Buffer | string {
 
         if (fs.existsSync(filePath)) {
             return fs.readFileSync(filePath, 'utf-8');
         }
 
         // Throw error if file to ssl key or crt not exists
-        throw Error(`[SSL Error] File Not Found - ${filePath}`)
+        throw Error(`[SSL Error] File Not Found - ${filePath}`);
     }
 }

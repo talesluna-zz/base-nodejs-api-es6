@@ -1,14 +1,14 @@
 import {
     defaultMongooseOptions,
     defaultSchemaOptions
-}                           from '../../config/mongoose/mongoose.conf';
-import Paginate             from './Paginate';
-import fs                   from 'fs';
-import path                 from 'path';
-import mongoose, {Mongoose} from 'mongoose';
-import {beautifyUnique}     from 'mongoose-beautiful-unique-validation';
-import {logger}             from '../common/Logs';
-import {dbs}                from '../../config/models.conf';
+}                               from '../../config/mongoose/mongoose.conf';
+import Paginate                 from './Paginate';
+import { logger }               from '../common/Logs';
+import { dbs }                  from '../../config/models.conf';
+import fs                       from 'fs';
+import path                     from 'path';
+import mongoose, { Mongoose }   from 'mongoose';
+import { beautifyUnique }       from 'mongoose-beautiful-unique-validation';
 
 /**
  * @description General methods for MongoDB databse
@@ -24,16 +24,16 @@ export default class Mongo extends Paginate {
      */
     public connect(database: any, success: VoidFunction, error: Function = process.exit) {
         if (database.enabled) {
-            return this._connectInMongoDB(database)
+            return this.connectInMongoDB(database)
                 .then(() => {
                     return success();
                 })
                 .catch((err: Error) => {
 
-                    logger.debug('[MongoDB Error] \n\n\t' + err.message + '\n\tEXIT\n');
+                    logger.debug(`[MongoDB Error] \n\n\t'${err.message}'\n\tEXIT\n`);
 
                     // Exit
-                    return error(1)
+                    return error(1);
 
                 });
         }
@@ -58,7 +58,7 @@ export default class Mongo extends Paginate {
      * @param {*} database
      * @returns {Connection}
      */
-    private _connectInMongoDB(database: any) {
+    private connectInMongoDB(database: any) {
 
         const mongooseIntance = new Mongoose();
 
@@ -76,13 +76,13 @@ export default class Mongo extends Paginate {
 
         // Set mongoose default options
         Object.keys(defaultMongooseOptions)
-            .forEach(key => {
-                mongooseIntance.set(key, defaultMongooseOptions[key]);
-            });
+        .forEach((key: string) => {
+            mongooseIntance.set(key, defaultMongooseOptions[key]);
+        });
 
         // Synchronize models in dir to mongoose
         fs.readdirSync(path.join(__dirname, '../../api/models', database.dbname))
-            .forEach(filename => {
+            .forEach((filename: string) => {
 
                 // Define path for model script
                 const schema = require(path.join(__dirname, '../../api/models/', database.dbname, filename)).default;
@@ -91,7 +91,7 @@ export default class Mongo extends Paginate {
                 const options = Object.assign(defaultSchemaOptions, schema.options);
 
                 // Set schema configs
-                Object.keys(options).forEach(key => {
+                Object.keys(options).forEach((key: string) => {
                     schema.set(key, options[key]);
                 });
 
@@ -105,7 +105,7 @@ export default class Mongo extends Paginate {
         dbs[database.dbname] = mongooseIntance;
 
         // Return db connection
-        return dbs[database.dbname].connect(this._createMongooseUri('mongodb', database));
+        return dbs[database.dbname].connect(this.createMongooseUri('mongodb', database));
     }
 
 
@@ -117,7 +117,7 @@ export default class Mongo extends Paginate {
      *
      * @returns {string}
      */
-    private _createMongooseUri(driver: string, config: any) {
+    private createMongooseUri(driver: string, config: any) {
 
         // Build URI options query
         const options   = `ssl=${config.ssl}&authSource=${config.authSource}`;

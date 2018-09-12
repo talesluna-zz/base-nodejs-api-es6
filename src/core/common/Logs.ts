@@ -1,13 +1,14 @@
-declare const process: {env: {[prop: string]: any}}
-import log4js, { Logger, Configuration } from 'log4js';
-import { Application } from 'express';
+declare const process: {env: {[prop: string]: any}};
+
+import log4js, { Logger, Configuration }    from 'log4js';
+import { Application }                      from 'express';
 
 export let logger: Console|Logger = console;
 
 const logConfigure: Configuration = {
     pm2: true,
     appenders: {
-        stdout: {type: 'stdout'}
+        stdout: { type: 'stdout' }
     },
     categories: {
         default: {
@@ -15,7 +16,8 @@ const logConfigure: Configuration = {
             appenders: ['stdout']
         }
     }
-}
+};
+
 
 const logFormats = {
     dev     : '[:status] - :method :url in :response-time ms',
@@ -45,14 +47,14 @@ export default class Logs {
 
 
         // Create logger (no use files in dev mode)
-        logger = this._createLogger(config, !isDev);
+        logger = this.createLogger(config, !isDev);
 
 
         // Apply logger to express
         app.use(log4js.connectLogger(logger, {
             level: 'auto',
             format: isDev ? logFormats.dev : logFormats.default
-        }))
+        }));
 
     }
 
@@ -64,21 +66,21 @@ export default class Logs {
      * @returns {log4js.Logger}
      *
      */
-    private _createLogger(config: any, useFile = false) {
+    private createLogger(config: any, useFile = false) {
 
 
         // Add access to logConfigure
         if (useFile && config.access) {
-            logConfigure.appenders.access       = this._createFileAppender(config.access, config.compress);
-            logConfigure.appenders.filterAccess = this._createLevelFilter('info', 'access');
+            logConfigure.appenders.access       = this.createFileAppender(config.access, config.compress);
+            logConfigure.appenders.filterAccess = this.createLevelFilter('info', 'access');
             logConfigure.categories.default.appenders.push('filterAccess');
         }
 
 
         // Add errors to logConfigure
         if (useFile && config.errors) {
-            logConfigure.appenders.errors       = this._createFileAppender(config.errors, config.compress);
-            logConfigure.appenders.filterErrors = this._createLevelFilter('error', 'errors');
+            logConfigure.appenders.errors       = this.createFileAppender(config.errors, config.compress);
+            logConfigure.appenders.filterErrors = this.createLevelFilter('error', 'errors');
             logConfigure.categories.default.appenders.push('filterErrors');
         }
 
@@ -97,13 +99,13 @@ export default class Logs {
      * @returns {*}
      *
      */
-    private _createFileAppender(filepath: string, compress = false) {
+    private createFileAppender(filepath: string, compress = false) {
         return {
             type    : 'dateFile',
             pattern : '.yyyy-MM-dd',
             filename: filepath,
             compress: compress
-        }
+        };
     }
 
 
@@ -116,11 +118,11 @@ export default class Logs {
      * @returns {*}
      *
      */
-    private _createLevelFilter(level: string, appender: string) {
+    private createLevelFilter(level: string, appender: string) {
         return {
             type    : 'logLevelFilter',
             level   : level,
             appender: appender
-        }
+        };
     }
 }

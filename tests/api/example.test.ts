@@ -8,7 +8,7 @@ const server = chai.request(app);
 
 before((done) => {
     app.on('app_started', () => {
-        done()
+        done();
     });
 });
 
@@ -38,5 +38,6 @@ describe('Examples', () => {
                     done();
                 });
         });
-    })
+    });
+
 });

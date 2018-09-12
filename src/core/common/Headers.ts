@@ -1,5 +1,6 @@
-declare const process: {env: {[prop: string]: any}}
-import { Application, Request, Response, NextFunction } from "express";
+declare const process: {env: {[prop: string]: any}};
+
+import { Application, Request, Response, NextFunction } from 'express';
 
 /**
  * @description methods that manage cors and headers
@@ -8,7 +9,7 @@ export default class Headers {
 
     /**
      * @description sync defined header to express app
-     * 
+     *
      * @param {Application} app
      * @param {*} headers
      *
@@ -26,7 +27,7 @@ export default class Headers {
             app.use((req: Request, res: Response, next: NextFunction) => {
                 res.header(header, headers[header]);
                 next();
-            })
+            });
         });
     }
 }

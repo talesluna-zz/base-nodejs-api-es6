@@ -3,7 +3,7 @@
  */
 export default class Environment {
 
-    
+
     private envName: string|undefined;
     private env: any;
 
@@ -13,10 +13,10 @@ export default class Environment {
         this.envName = process.env.NODE_ENV;
 
         // Require environment by file
-        this.env = this._requireEnvironmentFile();
+        this.env = this.requireEnvironmentFile();
 
         // Override Node process.env
-        this._overrideEnv();
+        this.overrideEnv();
     }
 
     /**
@@ -24,7 +24,7 @@ export default class Environment {
      *
      * @returns {Boolean}
      */
-    isTest() {
+    public isTest() {
         return this.envName === 'test';
     }
 
@@ -52,17 +52,17 @@ export default class Environment {
     /**
      * @description Override the native proccess.env with the environment object
      */
-    private _overrideEnv() {
-        process.env = Object.assign(this.env, process.env, {envname: this.envName});
+    private overrideEnv() {
+        process.env = Object.assign(this.env, process.env, { envname: this.envName });
     }
 
 
     /**
      * @description Return require of environment object
-     * 
+     *
      * @returns {*}
      */
-    private _requireEnvironmentFile() {
+    private requireEnvironmentFile() {
         try {
             return require(`../../environment/${this.envName}.env`).env;
         } catch (err) {

@@ -2,9 +2,7 @@ import Service from './Service';
 
 
 /**
- * @class ExampleService
  * @description Example of another service extended from Service
- *
  */
 class ExampleService extends Service {
 

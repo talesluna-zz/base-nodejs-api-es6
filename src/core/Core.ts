@@ -3,12 +3,12 @@ import express, { Application }  from 'express';
 
 // Core
 import Security         from './common/Security';
-import Locales          from './common/Locale';
+import Locales          from './common/Locales';
 import Validator        from './common/Validator';
 import Routes           from './common/Routes';
 import Response         from './common/Response';
 import Headers          from './common/Headers';
-import Logs, {logger}   from './common/Logs';
+import Logs, { logger } from './common/Logs';
 import Database         from './database/Database';
 import Middlewares      from './middlewares/Middlewares';
 import Http             from './http/Http';
@@ -25,7 +25,8 @@ const END_SETUP_EVENTS = {
     VALIDATOR   : 'END_VALIDATOR',
     MIDDLEWARES : 'END_MIDDLEWARES',
     HTTP        : 'END_HTTP'
-}
+};
+
 
 /**
  * @description Application core
@@ -47,7 +48,7 @@ export default class Core {
     private locales     : Locales;
     private logs        : Logs;
     private server      : Http;
-    
+
 
     constructor() {
 
@@ -76,7 +77,7 @@ export default class Core {
      *
      * @return {Promise}
      */
-    bootstrap(middlewares = []) {
+    public bootstrap(middlewares = []) {
         return this.setupServer()
         .then(() => {
             this.setupMiddlewares(middlewares);
@@ -98,7 +99,7 @@ export default class Core {
     /**
      * @description inject response methods in express app ro resuse
      */
-    setupResponse() {
+    private setupResponse() {
         this.response = new Response();
         this.response.setApp(this.app);
     }
@@ -107,48 +108,48 @@ export default class Core {
     /**
      * @description configure helmet in exress app
      */
-    setupSecurity() {
+    private setupSecurity() {
         this.security.makeSecure(this.app);
     }
 
 
     /**
      * @description call server start method
-     * 
+     *
      * @returns {Promise}
      *
      */
-    setupServer() {
-        return this.server.startServer(this.app)
+    private setupServer() {
+        return this.server.startServer(this.app);
     }
 
 
     /**
      * @description configure Joi validators
      */
-    setupValidators() {
+    private setupValidators() {
         this.app.on(END_SETUP_EVENTS.LOCALES, () => {
             this.validator.setLocale(this.locales.locale, this.locales.getLocaleObject('joi'));
             this.validator.syncSettings();
-        })
+        });
     }
 
 
     /**
      * @description sync all api routes to express app (wait database)
      */
-    setupRoutes() {
+    private setupRoutes() {
         this.app.on(END_SETUP_EVENTS.MIDDLEWARES, () => {
 
             return this.routes.syncRoutes(this.app, this.environment.isVerbose());
-        })
+        });
     }
 
 
     /**
      * @description sync all defined header to express ap
      */
-    setupHeaders() {
+    private setupHeaders() {
         this.headers.setHeaders(this.app);
     }
 
@@ -156,7 +157,7 @@ export default class Core {
     /**
      * @description Configure and apply log4js.
      */
-    setupLogs() {
+    private setupLogs() {
         if (!this.environment.isTest()) {
             this.logs.logging(this.app, this.environment.isDev());
         }
@@ -165,10 +166,10 @@ export default class Core {
 
     /**
      * @description sync express middlewares
-     * 
+     *
      * @param {Array} middlewares
      */
-    setupMiddlewares(middlewares = []) {
+    private setupMiddlewares(middlewares = []) {
         this.app.on(END_SETUP_EVENTS.DATABASE, () => {
 
             // Use others default middleares
@@ -185,17 +186,17 @@ export default class Core {
     /**
      * @description configure Locales
      */
-    setupLocales() {
+    private setupLocales() {
         this.app.emit(END_SETUP_EVENTS.LOCALES);
     }
 
 
     /**
      * @description connect all configured databases
-     * 
+     *
      * @param {*} beforeConnect callback to call after all databases connect, in promise resolve.
      */
-    setupDatabases() {
+    private setupDatabases() {
         this.app.on(END_SETUP_EVENTS.LOCALES, () => {
 
             // Define languages
@@ -212,11 +213,9 @@ export default class Core {
                 .then(() => {
                     return this.app.emit(END_SETUP_EVENTS.DATABASE);
                 })
-                .catch(err => {
-                    logger.debug(err);
-                });
+                .catch((err: Error) => logger.debug(err));
 
-        })
+        });
 
     }
 

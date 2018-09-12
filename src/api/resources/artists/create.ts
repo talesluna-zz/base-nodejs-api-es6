@@ -4,7 +4,7 @@ import { dbs } from '../../../config/models.conf';
 
 export default (req: Request, res: Response) => {
 
-    const {Artists} = dbs.DB_Artist.models;
+    const { Artists } = dbs.DB_Artist.models;
 
     // Create new artist by req.body data
     Artists
@@ -18,5 +18,5 @@ export default (req: Request, res: Response) => {
 
             return res.api.send(err, res.api.codes.INTERNAL_SERVER_ERROR);
 
-        })
+        });
 };

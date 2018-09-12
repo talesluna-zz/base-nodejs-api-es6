@@ -5,4 +5,4 @@ export const defaultMongooseOptions: any = {
 export const defaultSchemaOptions: any = {
     timestamps       : true,
     runSettersOnQuery: true
-}
+};
