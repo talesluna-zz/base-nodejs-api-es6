@@ -1,14 +1,15 @@
 import {
     defaultMongooseOptions,
     defaultSchemaOptions
-}                               from '../../config/mongoose/mongoose.conf';
-import Paginate                 from './Paginate';
-import { logger }               from '../common/Logs';
-import { dbs }                  from '../../config/models.conf';
-import fs                       from 'fs';
-import path                     from 'path';
-import mongoose, { Mongoose }   from 'mongoose';
-import { beautifyUnique }       from 'mongoose-beautiful-unique-validation';
+}                       from '../../config/mongoose/mongoose.conf';
+import Paginate         from './Paginate';
+import { logger }       from '../common/Logs';
+import { dbs }          from '../../config/models.conf';
+import fs               from 'fs';
+import path             from 'path';
+import mongoose         from 'mongoose';
+import beautifyUnique   from 'mongoose-beautiful-unique-validation';
+
 
 /**
  * @description General methods for MongoDB databse
@@ -60,24 +61,24 @@ export default class Mongo extends Paginate {
      */
     private connectInMongoDB(database: any) {
 
-        const mongooseIntance = new Mongoose();
+        const mongooseInstance = new mongoose.Mongoose();
 
         // Define if mongoose should show  or hide logs
-        mongooseIntance.set('debug', database.logging);
+        mongooseInstance.set('debug', database.logging);
 
         // Use promises
-        mongooseIntance.Promise = global.Promise;
+        mongooseInstance.Promise = global.Promise;
 
         // Inject paginate function in mongoose
-        mongooseIntance.Model.paginate = this.mongoosePaginate;
+        mongooseInstance.Model.paginate = this.mongoosePaginate;
 
         // Use plugin Beautify Unique in mongoose (for parse mongodb unique errors)
-        mongooseIntance.plugin(beautifyUnique);
+        mongooseInstance.plugin(beautifyUnique);
 
         // Set mongoose default options
         Object.keys(defaultMongooseOptions)
         .forEach((key: string) => {
-            mongooseIntance.set(key, defaultMongooseOptions[key]);
+            mongooseInstance.set(key, defaultMongooseOptions[key]);
         });
 
         // Synchronize models in dir to mongoose
@@ -95,17 +96,17 @@ export default class Mongo extends Paginate {
                     schema.set(key, options[key]);
                 });
 
-                // Import modal to mongoose istance
-                mongooseIntance.model(schema.options.collection, schema);
+                // Import modal to mongoose instance
+                mongooseInstance.model(schema.options.collection, schema);
 
             });
 
 
         // Save mongoose instance
-        dbs[database.dbname] = mongooseIntance;
+        dbs[database.dbname] = mongooseInstance;
 
         // Return db connection
-        return dbs[database.dbname].connect(this.createMongooseUri('mongodb', database));
+        return dbs[database.dbname].connect(this.createMongooseUri('mongodb', database), {useNewUrlParser: true});
     }
 
 

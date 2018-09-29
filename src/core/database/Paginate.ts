@@ -108,7 +108,7 @@ export default class Paginate {
         // Initialize paginate object
         let paginateObject: PaginateObject;
 
-        return self.count()
+        return self.countDocuments()
             .then((total: number) => {
 
                 // Set paginate result

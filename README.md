@@ -12,7 +12,7 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 [![ssl](https://img.shields.io/badge/SSL-HTTPS-green.svg?style=flat-square)](src/core/http/SSL.js)
 [![helmet](https://img.shields.io/badge/Security-Helmet-pink.svg?style=flat-square)](src/core/common/Security.js)
 
-### What's new in 3.0.0?
+### What's new in 3.0?
 
 - Typescript support
 - Update some dependences
@@ -20,6 +20,7 @@ This is a base API using ExpressJs and NodeJs with docker deploy or PM2, easily 
 - New structure
 - Core abstraction
 - Log with log4js (saving in .log file)
+- New resource index with prefix
 - Improvements
 
 ## Structure

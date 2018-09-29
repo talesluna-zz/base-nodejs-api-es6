@@ -1,5 +1,5 @@
 declare module 'mongoose-beautiful-unique-validation' {
-    const beautifyUnique: Function;
+    export default Function;
 }
 
 declare module 'mongoose' {

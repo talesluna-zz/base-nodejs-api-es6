@@ -10,24 +10,18 @@ import read     from './read';
 import readOne  from './readOne';
 import update   from './update';
 
-export default (route: Router) => {
 
-    // Route to create new music
-    route.post('/musics', [
-        createValidator,
-        create
-    ]);
+export default {
+    prefix: 'musics',
+    routes: (router: Router) => {
 
-    // Route to update existent music
-    route.put('/musics/:_id', [
-        updateValidator,
-        update
-    ]);
+        router.post('/', [createValidator, create]);
 
-    // Route to read all music
-    route.get('/musics', read);
+        router.put('/:_id', [updateValidator, update]);
 
-    // Route to read specific music
-    route.get('/musics/:_id', readOne);
+        router.get('/', read);
 
+        router.get('/:_id', readOne);
+
+    }
 };

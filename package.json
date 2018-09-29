@@ -1,6 +1,6 @@
 {
   "name": "base-nodejs-api-es6",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Base for REST API using NodeJS/ExpressJS, with Docker or PM2 deployment.",
   "author": "Tales Luna <tales.ferreira.luna@gmail.com>",
   "license": "MIT",

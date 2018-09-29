@@ -4,7 +4,7 @@ declare module 'core' {
 
     type EnvironmentMongoDatabase = {
         host        : string,
-        port        : 27017,
+        port        : 27017 | number | typeof process.env.PORT,
         user        : string,
         pass        : string,
         name        : string,
@@ -20,7 +20,7 @@ declare module 'core' {
 
     type EnvironmentSQLDatabase = {
         host        : string,
-        port        : number,
+        port        : number | typeof process.env.PORT,
         user        : string,
         pass        : string,
         name        : string,
@@ -65,7 +65,7 @@ declare module 'core' {
             }
         },
         databases: {
-            [prop: string]: EnvironmentMongoDatabase|EnvironmentSQLDatabase
+            [prop: string]: EnvironmentMongoDatabase | EnvironmentSQLDatabase
         }
     }
 

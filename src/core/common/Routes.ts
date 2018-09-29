@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express';
+import { Application, Request, Response, Router } from 'express';
 import { logger }   from './Logs';
 import path         from 'path';
 import fs           from 'fs';
@@ -41,11 +41,31 @@ export default class Routes {
                     !unixHidden.test(module.toString()) &&
                     (fs.existsSync(`${moduleIndex}.ts`) || fs.existsSync(`${moduleIndex}.js`))
                 ) {
-                    require(moduleIndex).default(app);
 
-                    if (verbose) {
-                        logger.debug(`[ROUTES] Loaded '${module}' resource`);
+                    // Instance of a router for module
+                    const routerInstance = Router({});
+
+                    // Require module with this router instance
+                    const moduleRoute = require(moduleIndex).default;
+
+                    // Sync module route with router instance
+                    if (moduleRoute.prefix && moduleRoute.routes) {
+
+                        moduleRoute.routes(routerInstance);
+
+                        // Define resource prefix
+                        const prefix = (moduleRoute.prefix || module)
+                            .toString()
+                            .toLowerCase();
+
+                        // Use router instance in express aplication
+                        app.use(`/${prefix}`, routerInstance);
+
+                        if (verbose) {
+                            logger.debug(`[ROUTES] Resource '${module}' has loaded in '/${prefix}' route.`);
+                        }
                     }
+
 
                 }
 
